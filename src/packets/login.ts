@@ -1,15 +1,10 @@
 import Packet from "../structures/Packet";
 import Player from "../structures/Player";
-import { DATA_LENGTH } from "../utils/constants/dataLength";
 import { readBoolean } from "../utils/encoding/boolean";
-import { readString, writeString } from "../utils/encoding/string";
-import { writeVarInt } from "../utils/encoding/varInt";
+import { readString } from "../utils/encoding/string";
 
-export function handleLoginStart(packet: Packet, player: Player) {
-  console.log('login')
-  const data = decodeLoginStart(packet);
-  console.log(data);
-  player.name = data.name;
+export function handleLoginStart(packet: Packet, _player: Player) {
+  decodeLoginStart(packet);
 }
 
 function decodeLoginStart(packet: Packet) {
@@ -22,7 +17,7 @@ function decodeLoginStart(packet: Packet) {
   let uuid: string | undefined;
 
   if (playerHasUUID.value) {
-    uuid = readString(data.slice(name.bytes + DATA_LENGTH.boolean)).value;
+    uuid = readString(data.slice(name.bytes + playerHasUUID.bytes)).value;
   }
 
   const parsedPacket = {
