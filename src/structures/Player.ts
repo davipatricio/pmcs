@@ -29,6 +29,7 @@ export default class Player {
       .setData(writeString(JSON.stringify(createChatComponent(reason))));
 
     this.sendPacket(packet);
+    this.disconnect();
   }
 
   disconnect() {
