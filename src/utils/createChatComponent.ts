@@ -1,6 +1,6 @@
 interface ChatComponent {
   text: string;
-  extra: {
+  extra?: {
     text: string;
     color?: string;
   }[];
@@ -12,40 +12,33 @@ interface ChatComponent {
  * @returns The chat component object.
  */
 export default function createChatComponent(text: string): ChatComponent {
+  const parts = text.split("§");
   const chatComponent: ChatComponent = {
-    text: "",
-    extra: [],
+    text: parts.shift() || ""
   };
 
-  const parts = text.split("§");
-  let previousColor = "";
+  if (parts.length !== 0) {
+    let previousColor = "";
 
-  parts.forEach((part, index) => {
-    if (index === 0) {
-      chatComponent.text = part;
-    } else {
+    chatComponent.extra = parts.map((part) => {
       const colorCode = part.charAt(0);
       const remainingText = part.slice(1);
 
       const extraComponent = {
         text: remainingText,
-        color: getColorFromCode(colorCode),
+        color: getColorFromCode(colorCode) || previousColor
       };
 
-      if (previousColor) {
-        extraComponent.color = previousColor;
-      }
-
-      chatComponent.extra.push(extraComponent);
-
       previousColor = extraComponent.color;
-    }
-  });
+
+      return extraComponent;
+    });
+  }
 
   return chatComponent;
 }
 
-function getColorFromCode(colorCode: string): string | undefined {
+function getColorFromCode(colorCode: string) {
   // Map Minecraft color codes to CSS color names or hex values
   const colorMap: { [key: string]: string } = {
     0: "black",
@@ -63,8 +56,8 @@ function getColorFromCode(colorCode: string): string | undefined {
     c: "red",
     d: "light_purple",
     e: "yellow",
-    f: "white",
+    f: "white"
   };
 
-  return colorMap[colorCode] || undefined;
+  return colorMap[colorCode];
 }
