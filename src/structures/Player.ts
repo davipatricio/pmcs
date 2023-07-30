@@ -4,6 +4,7 @@ import createChatComponent from '../utils/createChatComponent';
 import { writeString } from '../utils/encoding/string';
 import { writeVarInt } from '../utils/encoding/varInt';
 import Packet from './Packet';
+import type Server from './Server';
 
 export enum PlayerState {
   Handshaking,
@@ -22,11 +23,14 @@ export default class Player extends EventEmitter {
    */
   public state: PlayerState = PlayerState.Handshaking;
   /**
-   * The name of the current player. Empty string if user is not logged in.
+   * The name of the current player. Empty string if user is not logged in (state not `Play`).
    */
   public username: string = '';
 
-  public constructor(public socket: Socket) {
+  public constructor(
+    public socket: Socket,
+    public server: Server,
+  ) {
     super();
   }
 
@@ -90,5 +94,12 @@ export default class Player extends EventEmitter {
     listener: PlayerEvents[T],
   ): this {
     return super.once(event, listener);
+  }
+
+  public emit<T extends keyof PlayerEvents>(
+    event: T,
+    ...args: Parameters<PlayerEvents[T]>
+  ): boolean {
+    return super.emit(event, ...args);
   }
 }

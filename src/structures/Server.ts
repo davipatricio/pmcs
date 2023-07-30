@@ -1,20 +1,23 @@
-import * as EventEmitter from 'node:events';
+import { EventEmitter } from 'node:events';
 import { createServer } from 'node:net';
 import type { Socket, Server as NetServer } from 'node:net';
+import type ServerListPingEvent from '../events/ServerListPingEvent';
 import decidePacket from '../packets/decider';
 import Packet from './Packet';
-import Player from './Player';
-
-interface ServerOptions {
-  compress?: boolean;
-  maxPlayers?: number;
-  noDelay?: boolean;
-  port: number;
-}
+import Player, { PlayerState } from './Player';
 
 interface ServerEvents {
   playerJoin(player: Player): void;
   playerQuit(player: Player): void;
+  serverListPing(event: ServerListPingEvent): void;
+}
+
+interface ServerOptions {
+  compress: boolean;
+  defaultMotd: string;
+  maxPlayers: number;
+  noDelay: boolean;
+  port: number;
 }
 
 const defaultOptions: ServerOptions = {
@@ -22,14 +25,15 @@ const defaultOptions: ServerOptions = {
   maxPlayers: 20,
   noDelay: false,
   port: 25_565,
+  defaultMotd: 'A Minecraft Server',
 };
 
-export default class Server extends EventEmitter.EventEmitter {
-  public players: Player[] = [];
+export default class Server extends EventEmitter {
+  private allPlayers: Player[] = [];
   public options: ServerOptions;
   private readonly netServer: NetServer;
 
-  public constructor(options?: ServerOptions) {
+  public constructor(options?: Partial<ServerOptions>) {
     super();
 
     this.options = {
@@ -48,8 +52,8 @@ export default class Server extends EventEmitter.EventEmitter {
     );
 
     this.netServer.on('connection', (socket: Socket) => {
-      const player = new Player(socket);
-      this.players.push(player);
+      const player = new Player(socket, this);
+      this.allPlayers.push(player);
 
       socket.on('data', (data) => {
         for (const packet of Packet.fromBuffer(data))
@@ -57,9 +61,13 @@ export default class Server extends EventEmitter.EventEmitter {
       });
 
       socket.on('close', () => {
-        this.players.splice(this.players.indexOf(player), 1);
+        this.allPlayers.splice(this.allPlayers.indexOf(player), 1);
       });
     });
+  }
+
+  public get players() {
+    return this.allPlayers.filter((player) => player.state === PlayerState.Play);
   }
 
   public on<T extends keyof ServerEvents>(
@@ -74,5 +82,12 @@ export default class Server extends EventEmitter.EventEmitter {
     listener: ServerEvents[T],
   ): this {
     return super.once(event, listener);
+  }
+
+  public emit<T extends keyof ServerEvents>(
+    event: T,
+    ...args: Parameters<ServerEvents[T]>
+  ): boolean {
+    return super.emit(event, ...args);
   }
 }

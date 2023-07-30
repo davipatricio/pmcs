@@ -1,10 +1,9 @@
-import Packet from "../structures/Packet";
-import type Player from "../structures/Player";
-import { writeString } from "../utils/encoding/string";
-import { writeVarInt } from "../utils/encoding/varInt";
+import ServerListPingEvent from '../events/ServerListPingEvent';
+import type Packet from '../structures/Packet';
+import type Player from '../structures/Player';
 
 export function handleStatusRequest(_packet: Packet, player: Player) {
-  sendStatusResponse(player);
+  player.server.emit('serverListPing', new ServerListPingEvent(player));
 }
 
 export function handlePingRequest(packet: Packet, player: Player) {
@@ -13,36 +12,10 @@ export function handlePingRequest(packet: Packet, player: Player) {
 
 export function handleLegacyPing(packet: Packet, player: Player) {
   sendLegacyPingResponse(packet, player);
-  console.log("Sending legacy ping response");
 }
 
 function sendLegacyPingResponse(_packet: Packet, _player: Player) {
-  throw new Error("Not implemented");
-}
-
-
-function sendStatusResponse(player: Player) {
-  const data = {
-    version: {
-      name: "1.8.9",
-      protocol: 47
-    },
-    players: {
-      max: 1,
-      online: 0
-    },
-    description: {
-      text: '12345678901',
-      bold: 'true'
-    }
-  };
-
-  const packet = new Packet();
-
-  packet.setID(writeVarInt(0));
-  packet.setData(writeString(JSON.stringify(data)));
-
-  player.sendPacket(packet);
+  throw new Error('Not implemented');
 }
 
 function sendPingResponse(packet: Packet, player: Player) {
