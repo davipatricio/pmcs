@@ -13,10 +13,25 @@ interface ServerEvents {
 }
 
 interface ServerOptions {
+  /**
+   * Whether to enable compression. Defaults to `false`.
+   */
   compress: boolean;
+  /**
+   * The default MOTD to send to clients. Can be changed at runtime. Defaults to `A Minecraft Server`.
+   */
   defaultMotd: string;
+  /**
+   * The maximum amount of players that can be connected to the server at the same time. Can be changed at runtime. Defaults to `20`.
+   */
   maxPlayers: number;
+  /**
+   * Whether to disable the Nagle algorithm. Defaults to `false`.
+   */
   noDelay: boolean;
+  /**
+   * The port to listen on. Defaults to `25565`.
+   */
   port: number;
 }
 
