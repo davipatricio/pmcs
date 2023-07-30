@@ -12,18 +12,17 @@ const baseData = {
   },
 };
 
+interface ServerListPingData {
+  maxPlayers: number;
+  playersCount: number;
+  text: string;
+}
+
 export default class ServerListPingEvent {
+  public sentResponse = false;
   public constructor(public player: Player) {}
 
-  public sendResponse({
-    text,
-    playerCount,
-    maxPlayers,
-  }: Partial<{
-    maxPlayers: number;
-    playerCount: number;
-    text: string;
-  }>) {
+  public sendResponse({ text, playersCount, maxPlayers } = {} as Partial<ServerListPingData>) {
     if (this.player.state !== PlayerState.Status) {
       throw new Error('Player is not in status state.');
     }
@@ -32,17 +31,14 @@ export default class ServerListPingEvent {
       ...baseData,
       players: {
         max: maxPlayers ?? 200,
-        online: playerCount ?? this.player.server.players.length,
+        online: playersCount ?? this.player.server.players.length,
       },
-      description: createChatComponent(
-        text ?? this.player.server.options.defaultMotd,
-      ),
+      description: createChatComponent(text ?? this.player.server.options.defaultMotd),
     };
 
-    const packet = new Packet()
-      .setID(writeVarInt(0x00))
-      .setData(writeString(JSON.stringify(data)));
+    const packet = new Packet().setID(writeVarInt(0x00)).setData(writeString(JSON.stringify(data)));
 
     this.player.sendPacket(packet);
+    this.sentResponse = true;
   }
 }

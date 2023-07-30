@@ -82,24 +82,15 @@ export default class Player extends EventEmitter {
     this.socket.destroy();
   }
 
-  public on<T extends keyof PlayerEvents>(
-    event: T,
-    listener: PlayerEvents[T],
-  ): this {
+  public on<T extends keyof PlayerEvents>(event: T, listener: PlayerEvents[T]): this {
     return super.on(event, listener);
   }
 
-  public once<T extends keyof PlayerEvents>(
-    event: T,
-    listener: PlayerEvents[T],
-  ): this {
+  public once<T extends keyof PlayerEvents>(event: T, listener: PlayerEvents[T]): this {
     return super.once(event, listener);
   }
 
-  public emit<T extends keyof PlayerEvents>(
-    event: T,
-    ...args: Parameters<PlayerEvents[T]>
-  ): boolean {
+  public emit<T extends keyof PlayerEvents>(event: T, ...args: Parameters<PlayerEvents[T]>): boolean {
     return super.emit(event, ...args);
   }
 }

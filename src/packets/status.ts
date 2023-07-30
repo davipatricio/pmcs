@@ -3,7 +3,11 @@ import type Packet from '../structures/Packet';
 import type Player from '../structures/Player';
 
 export function handleStatusRequest(_packet: Packet, player: Player) {
-  player.server.emit('serverListPing', new ServerListPingEvent(player));
+  const event = new ServerListPingEvent(player);
+
+  if (!player.server.emit('serverListPing', event) || !event.sentResponse) {
+    event.sendResponse();
+  }
 }
 
 export function handlePingRequest(packet: Packet, player: Player) {

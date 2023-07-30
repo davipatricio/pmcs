@@ -1,18 +1,12 @@
-import type Packet from "../structures/Packet";
-import type Player from "../structures/Player";
-import { PlayerState } from "../structures/Player";
-import { handleHandshake } from "./handshake";
-import { handleLoginStart } from "./login";
-import {
-  handleLegacyPing,
-  handlePingRequest,
-  handleStatusRequest
-} from "./status";
+import type Packet from '../structures/Packet';
+import type Player from '../structures/Player';
+import { PlayerState } from '../structures/Player';
+import { handleHandshake } from './handshake';
+import { handleLoginStart } from './login';
+import { handleLegacyPing, handlePingRequest, handleStatusRequest } from './status';
 
 export default function decidePacket(packet: Packet, player: Player) {
-  console.log(
-    `State: ${player.state} | Received packet ${packet.id} with ${packet.length} bytes of data.`
-  );
+  console.log(`State: ${player.state} | Received packet ${packet.id} with ${packet.length} bytes of data.`);
 
   switch (player.state) {
     case PlayerState.Handshaking: {

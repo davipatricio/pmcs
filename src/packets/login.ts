@@ -1,7 +1,7 @@
-import type Packet from "../structures/Packet";
-import type Player from "../structures/Player";
-import { readBoolean } from "../utils/encoding/boolean";
-import { readString } from "../utils/encoding/string";
+import type Packet from '../structures/Packet';
+import type Player from '../structures/Player';
+import { readBoolean } from '../utils/encoding/boolean';
+import { readString } from '../utils/encoding/string';
 
 export function handleLoginStart(packet: Packet, _player: Player) {
   decodeLoginStart(packet);
@@ -23,6 +23,6 @@ function decodeLoginStart(packet: Packet) {
   return {
     name: name.value,
     playerHasUUID: playerHasUUID.value,
-    uuid
+    uuid,
   };
 }

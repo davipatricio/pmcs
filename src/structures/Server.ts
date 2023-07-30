@@ -47,17 +47,14 @@ export default class Server extends EventEmitter {
   }
 
   public start() {
-    this.netServer.listen(this.options.port, () =>
-      console.log(`Server started on port ${this.options.port}`),
-    );
+    this.netServer.listen(this.options.port, () => console.log(`Server started on port ${this.options.port}`));
 
     this.netServer.on('connection', (socket: Socket) => {
       const player = new Player(socket, this);
       this.allPlayers.push(player);
 
       socket.on('data', (data) => {
-        for (const packet of Packet.fromBuffer(data))
-          decidePacket(packet, player);
+        for (const packet of Packet.fromBuffer(data)) decidePacket(packet, player);
       });
 
       socket.on('close', () => {
@@ -70,24 +67,15 @@ export default class Server extends EventEmitter {
     return this.allPlayers.filter((player) => player.state === PlayerState.Play);
   }
 
-  public on<T extends keyof ServerEvents>(
-    event: T,
-    listener: ServerEvents[T],
-  ): this {
+  public on<T extends keyof ServerEvents>(event: T, listener: ServerEvents[T]): this {
     return super.on(event, listener);
   }
 
-  public once<T extends keyof ServerEvents>(
-    event: T,
-    listener: ServerEvents[T],
-  ): this {
+  public once<T extends keyof ServerEvents>(event: T, listener: ServerEvents[T]): this {
     return super.once(event, listener);
   }
 
-  public emit<T extends keyof ServerEvents>(
-    event: T,
-    ...args: Parameters<ServerEvents[T]>
-  ): boolean {
+  public emit<T extends keyof ServerEvents>(event: T, ...args: Parameters<ServerEvents[T]>): boolean {
     return super.emit(event, ...args);
   }
 }
