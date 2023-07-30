@@ -1,3 +1,4 @@
+import { EventEmitter } from 'node:events';
 import type { Socket } from 'node:net';
 import createChatComponent from '../utils/createChatComponent';
 import { writeString } from '../utils/encoding/string';
@@ -11,7 +12,11 @@ export enum PlayerState {
   Play,
 }
 
-export default class Player {
+interface PlayerEvents {
+  quit(): void;
+}
+
+export default class Player extends EventEmitter {
   /**
    * The current state of the player.
    */
@@ -21,7 +26,9 @@ export default class Player {
    */
   public username: string = '';
 
-  public constructor(public socket: Socket) {}
+  public constructor(public socket: Socket) {
+    super();
+  }
 
   /**
    * Sets the player's state. Should not be changed manually.
@@ -34,7 +41,7 @@ export default class Player {
 
   /**
    * Sets the player's username. Should not be changed manually.
-   * 
+   *
    * @param username - The username to set the player to.
    */
   public setUsername(username: string) {
@@ -69,5 +76,19 @@ export default class Player {
    */
   public disconnect() {
     this.socket.destroy();
+  }
+
+  public on<T extends keyof PlayerEvents>(
+    event: T,
+    listener: PlayerEvents[T],
+  ): this {
+    return super.on(event, listener);
+  }
+
+  public once<T extends keyof PlayerEvents>(
+    event: T,
+    listener: PlayerEvents[T],
+  ): this {
+    return super.once(event, listener);
   }
 }

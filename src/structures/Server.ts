@@ -1,15 +1,21 @@
+import * as EventEmitter from 'node:events';
 import { createServer } from 'node:net';
 import type { Socket, Server as NetServer } from 'node:net';
 import decidePacket from '../packets/decider';
 import Packet from './Packet';
 import Player from './Player';
 
-type ServerOptions = {
+interface ServerOptions {
   compress?: boolean;
   maxPlayers?: number;
   noDelay?: boolean;
   port: number;
-};
+}
+
+interface ServerEvents {
+  playerJoin(player: Player): void;
+  playerQuit(player: Player): void;
+}
 
 const defaultOptions: ServerOptions = {
   compress: false,
@@ -18,12 +24,14 @@ const defaultOptions: ServerOptions = {
   port: 25_565,
 };
 
-export default class Server {
+export default class Server extends EventEmitter.EventEmitter {
   public players: Player[] = [];
   public options: ServerOptions;
   private readonly netServer: NetServer;
 
   public constructor(options?: ServerOptions) {
+    super();
+
     this.options = {
       ...defaultOptions,
       ...options,
@@ -52,5 +60,19 @@ export default class Server {
         this.players.splice(this.players.indexOf(player), 1);
       });
     });
+  }
+
+  public on<T extends keyof ServerEvents>(
+    event: T,
+    listener: ServerEvents[T],
+  ): this {
+    return super.on(event, listener);
+  }
+
+  public once<T extends keyof ServerEvents>(
+    event: T,
+    listener: ServerEvents[T],
+  ): this {
+    return super.once(event, listener);
   }
 }
