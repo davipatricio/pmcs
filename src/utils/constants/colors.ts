@@ -1,3 +1,4 @@
+/* eslint-disable id-length */
 export const Colors = {
   0: "black",
   1: "dark_blue",
