@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "incremental": false,
+    "target": "ESNEXT",
+    "module": "ESNext",
+    "declaration": false,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node"
+  }
+}
