@@ -1,10 +1,8 @@
 import Server from './structures/Server';
 
-const server = new Server({
-  port: 25_565,
-});
+const server = new Server();
 
-server.start();
+server.listen();
 
 server.on('serverListPing', (event) => {
   event.sendResponse({

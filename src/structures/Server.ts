@@ -61,8 +61,8 @@ export default class Server extends EventEmitter {
     });
   }
 
-  public start() {
-    this.netServer.listen(this.options.port, () => console.log(`Server started on port ${this.options.port}`));
+  public listen(port = this.options.port) {
+    this.netServer.listen(port, () => console.log(`Server started on port ${port}`));
 
     this.netServer.on('connection', (socket: Socket) => {
       const player = new Player(socket, this);
