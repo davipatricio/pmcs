@@ -10,18 +10,23 @@ interface ServerOptions {
   port: number;
 }
 
-export default class Server {
-  options: ServerOptions = {
-    compress: false,
-    maxPlayers: 20,
-    noDelay: false,
-    port: 25565
-  };
+const defaultOptions: ServerOptions = {
+  compress: false,
+  maxPlayers: 20,
+  noDelay: false,
+  port: 25565
+};
 
+export default class Server {
+  players: Player[] = [];
+  options: ServerOptions;
   #netServer: NetServer;
 
-  constructor(options: ServerOptions) {
-    this.options = options;
+  constructor(options?: ServerOptions) {
+    this.options = {
+      ...defaultOptions,
+      ...options
+    };
 
     this.#netServer = createServer({
       noDelay: this.options.noDelay
@@ -35,18 +40,17 @@ export default class Server {
 
     this.#netServer.on("connection", (socket: Socket) => {
       const player = new Player(socket);
-    
-      console.log("Client connected");
-    
+      this.players.push(player);
+
       socket.on("data", (data) => {
-        const packets = Packet.fromBuffer(data);
-    
-        for (const packet of packets) {
-          decidePacket(packet, player);
-        }
+        Packet.fromBuffer(data).forEach((packet) =>
+          decidePacket(packet, player)
+        );
       });
-    
-      // socket.on("close", () => console.log("Client disconnected"));
+
+      socket.on("close", () => {
+        this.players.splice(this.players.indexOf(player), 1);
+      });
     });
   }
 }
