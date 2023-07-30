@@ -6,13 +6,13 @@ import decidePacket from '../packets/decider';
 import Packet from './Packet';
 import Player, { PlayerState } from './Player';
 
-interface ServerEvents {
+interface MCServerEvents {
   playerJoin(player: Player): void;
   playerQuit(player: Player): void;
   serverListPing(event: ServerListPingEvent): void;
 }
 
-interface ServerOptions {
+interface MCServerOptions {
   /**
    * Whether to enable compression. Defaults to `false`.
    */
@@ -35,7 +35,7 @@ interface ServerOptions {
   port: number;
 }
 
-const defaultOptions: ServerOptions = {
+const defaultOptions: MCServerOptions = {
   compress: false,
   maxPlayers: 20,
   noDelay: false,
@@ -43,12 +43,12 @@ const defaultOptions: ServerOptions = {
   defaultMotd: 'A Minecraft Server',
 };
 
-export default class Server extends EventEmitter {
+export default class MCServer extends EventEmitter {
   private allPlayers: Player[] = [];
-  public options: ServerOptions;
+  public options: MCServerOptions;
   private readonly netServer: NetServer;
 
-  public constructor(options?: Partial<ServerOptions>) {
+  public constructor(options?: Partial<MCServerOptions>) {
     super();
 
     this.options = {
@@ -82,15 +82,15 @@ export default class Server extends EventEmitter {
     return this.allPlayers.filter((player) => player.state === PlayerState.Play);
   }
 
-  public on<T extends keyof ServerEvents>(event: T, listener: ServerEvents[T]): this {
+  public on<T extends keyof MCServerEvents>(event: T, listener: MCServerEvents[T]): this {
     return super.on(event, listener);
   }
 
-  public once<T extends keyof ServerEvents>(event: T, listener: ServerEvents[T]): this {
+  public once<T extends keyof MCServerEvents>(event: T, listener: MCServerEvents[T]): this {
     return super.once(event, listener);
   }
 
-  public emit<T extends keyof ServerEvents>(event: T, ...args: Parameters<ServerEvents[T]>): boolean {
+  public emit<T extends keyof MCServerEvents>(event: T, ...args: Parameters<MCServerEvents[T]>): boolean {
     return super.emit(event, ...args);
   }
 }

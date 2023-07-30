@@ -1,6 +1,6 @@
 import { Colors } from './constants/colors';
 
-type ChatComponent = {
+interface ChatComponent {
   bold?: boolean;
   color?: string;
   extra?: ChatComponent[];
@@ -10,7 +10,7 @@ type ChatComponent = {
   text: string;
 
   underlined?: boolean;
-};
+}
 
 /**
  * Converts raw text into a chat component.

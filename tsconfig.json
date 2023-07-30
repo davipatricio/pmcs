@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "incremental": false,
-    "target": "ESNEXT",
+    "incremental": true,
+    "target": "ESNext",
     "module": "ESNext",
     "declaration": false,
     "noEmit": true,
@@ -10,6 +10,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "tsBuildInfoFile": ".tsbuildinfo"
   }
 }
