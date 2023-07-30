@@ -1,5 +1,4 @@
-import { SEGMENT_BITS, CONTINUE_BIT } from "../constants/bits";
-
+import { SEGMENT_BITS, CONTINUE_BIT } from '../constants/bits';
 
 export function readVarInt(number: number[]) {
   let value = 0;
@@ -9,7 +8,7 @@ export function readVarInt(number: number[]) {
 
   while (continueReading) {
     const byte = number[numBytes];
-    value |= (byte & 0x7F) << shift;
+    value |= (byte & 0x7f) << shift;
     shift += 7;
     numBytes++;
 
@@ -18,7 +17,7 @@ export function readVarInt(number: number[]) {
 
   return {
     bytes: numBytes,
-    value: value,
+    value,
   };
 }
 

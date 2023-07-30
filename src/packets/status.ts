@@ -1,5 +1,5 @@
 import Packet from "../structures/Packet";
-import Player from "../structures/Player";
+import type Player from "../structures/Player";
 import { writeString } from "../utils/encoding/string";
 import { writeVarInt } from "../utils/encoding/varInt";
 
@@ -16,8 +16,8 @@ export function handleLegacyPing(packet: Packet, player: Player) {
   console.log("Sending legacy ping response");
 }
 
-function sendLegacyPingResponse(packet: Packet, player: Player) {
-  
+function sendLegacyPingResponse(_packet: Packet, _player: Player) {
+  throw new Error("Not implemented");
 }
 
 

@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "extends": [
+    "neon/common",
+    "neon/node",
+    "neon/typescript",
+    "neon/prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": [
+    "**/dist/*"
+  ],
+  "rules": {
+    "@typescript-eslint/lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "import/extensions": "off"
+  }
+}

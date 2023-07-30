@@ -1,5 +1,5 @@
-import Packet from "../structures/Packet";
-import Player from "../structures/Player";
+import type Packet from "../structures/Packet";
+import type Player from "../structures/Player";
 import { readShort } from "../utils/encoding/short";
 import { readString } from "../utils/encoding/string";
 import { readVarInt } from "../utils/encoding/varInt";
@@ -10,7 +10,7 @@ export function handleHandshake(packet: Packet, player: Player) {
 }
 
 function decodeHandshake(packet: Packet) {
-  let data = packet.data;
+  const data = packet.data;
 
   const protocolVersion = readVarInt(data);
 
@@ -22,12 +22,10 @@ function decodeHandshake(packet: Packet) {
     data.slice(protocolVersion.bytes + serverAddress.bytes + serverPort.bytes)
   );
 
-  const parsedPacket = {
+  return {
     protocolVersion: protocolVersion.value,
     serverAddress: serverAddress.value,
     serverPort: serverPort.value,
     nextState: nextState.value
   };
-
-  return parsedPacket;
 }

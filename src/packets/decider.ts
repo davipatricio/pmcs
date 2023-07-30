@@ -1,5 +1,6 @@
-import Packet from "../structures/Packet";
-import Player, { PlayerState } from "../structures/Player";
+import type Packet from "../structures/Packet";
+import type Player from "../structures/Player";
+import { PlayerState } from "../structures/Player";
 import { handleHandshake } from "./handshake";
 import { handleLoginStart } from "./login";
 import {
@@ -26,6 +27,10 @@ export default function decidePacket(packet: Packet, player: Player) {
 
     case PlayerState.Login: {
       handleLoginPackets(packet, player);
+      break;
+    }
+
+    case PlayerState.Play: {
       break;
     }
   }

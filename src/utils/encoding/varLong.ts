@@ -1,5 +1,4 @@
-import { SEGMENT_BITS, CONTINUE_BIT } from "../constants/bits";
-
+import { SEGMENT_BITS, CONTINUE_BIT } from '../constants/bits';
 
 export function readVarLong(buffer: number[]) {
   let numRead = 0;
@@ -8,7 +7,7 @@ export function readVarLong(buffer: number[]) {
 
   do {
     if (numRead > 10) {
-      throw new Error("VarLong is too big");
+      throw new Error('VarLong is too big');
     }
 
     read = buffer.shift()!;
@@ -19,7 +18,7 @@ export function readVarLong(buffer: number[]) {
 
   return {
     value: result,
-    bytes: numRead
+    bytes: numRead,
   };
 }
 

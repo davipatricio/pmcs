@@ -1,20 +1,21 @@
-import { readVarInt } from "../utils/encoding/varInt";
+import { Buffer } from 'node:buffer';
+import { readVarInt } from '../utils/encoding/varInt';
 
 export default class Packet {
-  id: number = 0;
-  data: number[] = [];
+  public id: number = 0;
+  public data: number[] = [];
 
-  constructor(id?: number, data?: number[]) {
+  public constructor(id?: number, data?: number[]) {
     this.id = id ?? this.id;
     this.data = data ?? this.data;
   }
 
-  setID(id: number[]) {
+  public setID(id: number[]) {
     this.id = readVarInt(id).value;
     return this;
   }
 
-  setData(data: number[]) {
+  public setData(data: number[]) {
     this.data = data;
     return this;
   }
@@ -22,29 +23,30 @@ export default class Packet {
   /**
    * Returns the length of the current packet (including the ID)
    */
-  get length() {
+  public get length() {
     return this.data.length + 1;
   }
 
   /**
    * Returns the buffer of the current packet
+   *
    * @returns The buffer of the current packet
    */
-  getBuffer() {
+  public getBuffer() {
     return Buffer.from([this.length, this.id, ...this.data]);
   }
 
   /**
    * Returns an array of packets from a buffer
-   * @param buffer The buffer to read from
+   *
+   * @param buffer - The buffer to read from
    * @returns An array of packets
    */
-  static fromBuffer(buffer: Buffer) {
+  public static fromBuffer(buffer: Buffer) {
     const packets: Packet[] = [];
+    let bufferArray = [...buffer];
 
-    while (buffer.length > 0) {
-      const bufferArray = [...buffer];
-
+    while (bufferArray.length > 0) {
       const packetLength = readVarInt(bufferArray);
       const packetId = readVarInt(bufferArray.slice(packetLength.bytes));
       const packetData = bufferArray.slice(packetLength.bytes + packetId.bytes);
@@ -53,7 +55,7 @@ export default class Packet {
 
       packets.push(packet);
 
-      buffer = buffer.subarray(packetLength.value + 1);
+      bufferArray = bufferArray.slice(packetLength.value + 1);
     }
 
     return packets;

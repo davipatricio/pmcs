@@ -1,30 +1,31 @@
-import { Colors } from "./constants/colors";
+import { Colors } from './constants/colors';
 
-interface ChatComponent {
-  text: string;
-  color?: string;
+type ChatComponent = {
   bold?: boolean;
-  italic?: boolean;
-  underlined?: boolean;
-  strikethrough?: boolean;
-  obfuscated?: boolean;
-
+  color?: string;
   extra?: ChatComponent[];
-}
+  italic?: boolean;
+  obfuscated?: boolean;
+  strikethrough?: boolean;
+  text: string;
+
+  underlined?: boolean;
+};
 
 /**
  * Converts raw text into a chat component.
- * @param text The raw text to be converted into a chat component. e.g. "§7A Minecraft server"
+ *
+ * @param text - The raw text to be converted into a chat component. e.g. "§7A Minecraft server"
  * @returns The chat component object.
  */
 export default function createChatComponent(text: string): ChatComponent {
-  const parts = text.split("§");
+  const parts = text.split('§');
   const chatComponent: ChatComponent = {
-    text: parts.shift() || ""
+    text: parts.shift() ?? '',
   };
 
   if (parts.length !== 0) {
-    let previousColor = "";
+    let previousColor = '';
 
     chatComponent.extra = parts.map((part) => {
       const colorCode = part.charAt(0) as keyof typeof Colors;
@@ -32,7 +33,7 @@ export default function createChatComponent(text: string): ChatComponent {
 
       const extraComponent = {
         text: remainingText,
-        color: getColorFromCode(colorCode) || previousColor
+        color: getColorFromCode(colorCode) || previousColor,
       };
 
       previousColor = extraComponent.color;
