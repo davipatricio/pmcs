@@ -4,14 +4,19 @@ export default class Packet {
   id: number = 0;
   data: number[] = [];
 
-  constructor() {}
+  constructor(id?: number, data?: number[]) {
+    this.id = id ?? this.id;
+    this.data = data ?? this.data;
+  }
 
   setID(id: number[]) {
     this.id = readVarInt(id).value;
+    return this;
   }
 
   setData(data: number[]) {
     this.data = data;
+    return this;
   }
 
   /**
@@ -26,13 +31,7 @@ export default class Packet {
    * @returns The buffer of the current packet
    */
   getBuffer() {
-    const buffer = [];
-
-    buffer.push(this.length);
-    buffer.push(this.id);
-    buffer.push(...this.data);
-
-    return Buffer.from(buffer);
+    return Buffer.from([this.length, this.id, ...this.data]);
   }
 
   /**
@@ -42,20 +41,19 @@ export default class Packet {
    */
   static fromBuffer(buffer: Buffer) {
     const packets: Packet[] = [];
-    const data = [...buffer];
 
-    const readPacket = () => {
-      const packet = new Packet();
+    while (buffer.length > 0) {
+      const bufferArray = [...buffer];
 
-      const packetLength = data.shift()!;
-      packet.setID([data.shift()!]);
-      packet.setData(data.splice(0, packetLength - 1));
+      const packetLength = readVarInt(bufferArray);
+      const packetId = readVarInt(bufferArray.slice(packetLength.bytes));
+      const packetData = bufferArray.slice(packetLength.bytes + packetId.bytes);
+
+      const packet = new Packet().setID([packetId.value]).setData(packetData);
 
       packets.push(packet);
-    }
 
-    while (data.length > 0) {
-      readPacket();
+      buffer = buffer.subarray(packetLength.value + 1);
     }
 
     return packets;
