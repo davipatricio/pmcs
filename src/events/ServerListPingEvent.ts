@@ -7,9 +7,11 @@ import { writeVarInt } from '../utils/encoding/varInt';
 
 const baseData = {
   version: {
-    name: '1.8.9',
-    protocol: 47,
+    name: '1.20.2',
+    protocol: 764,
   },
+  enforcesSecureChat: true,
+  previewsChat: true,
 };
 
 interface ServerListPingData {
@@ -32,6 +34,12 @@ export default class ServerListPingEvent {
       players: {
         max: maxPlayers ?? 200,
         online: playersCount ?? this.player.server.players.length,
+        sample: [
+          {
+            name: 'whoisveric',
+            id: '0402d80a-fe57-44eb-8134-8d4988b74bf5',
+          },
+        ],
       },
       description: createChatComponent(text ?? this.player.server.options.defaultMotd),
     };

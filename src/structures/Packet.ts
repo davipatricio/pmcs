@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-import { readVarInt } from '../utils/encoding/varInt';
+import { readVarInt, writeVarInt } from '../utils/encoding/varInt';
 
 export default class Packet {
   public id: number = 0;
@@ -24,7 +24,7 @@ export default class Packet {
    * Returns the length of the current packet (including the ID)
    */
   public get length() {
-    return this.data.length + 1;
+    return writeVarInt(this.data.length + 1);
   }
 
   /**
@@ -33,7 +33,7 @@ export default class Packet {
    * @returns The buffer of the current packet
    */
   public getBuffer() {
-    return Buffer.from([this.length, this.id, ...this.data]);
+    return Buffer.from([...this.length, this.id, ...this.data]);
   }
 
   /**

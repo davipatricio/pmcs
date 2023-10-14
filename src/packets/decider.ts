@@ -38,6 +38,9 @@ function handleHandshakingPackets(packet: Packet, player: Player) {
     case 0xfe:
       handleLegacyPing(packet, player);
       break;
+    case 0x7a:
+      console.log('TODO: Handle legacy status request');
+      break;
   }
 }
 
