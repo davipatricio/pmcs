@@ -1,78 +1,12 @@
 import { EventEmitter } from 'node:events';
 import type { Server as NetServer, Socket } from 'node:net';
 import { createServer } from 'node:net';
-import type ServerListPingEvent from '../events/ServerListPingEvent';
+import { PluginManager } from '../managers/PluginManager';
 import decidePacket from '../packets/decider';
+import type { MCServerEvents } from '../types/MCServerEvents';
+import type { MCPartialServerOptions, MCServerOptions } from '../types/MCServerOptions';
 import Packet from './Packet';
 import Player, { PlayerState } from './Player';
-
-type RecursivePartial<T> = {
-  [P in keyof T]?: RecursivePartial<T[P]>;
-};
-
-interface MCServerEvents {
-  playerJoin(player: Player): void;
-  playerQuit(player: Player): void;
-  serverListPing(event: ServerListPingEvent): void;
-}
-
-interface MCServerOptions {
-  /**
-   * Options related to incoming connections.
-   */
-  connection: {
-    /**
-     * Whether to enable compression. Defaults to `false`.
-     */
-    compress: boolean;
-    /**
-     * Whether to disable the Nagle algorithm. Defaults to `false`.
-     */
-    noDelay: boolean;
-  };
-  /**
-   * Options related to the server.
-   */
-  server: {
-    /**
-     * The default MOTD to send to clients. Can be changed at runtime. Defaults to `A Minecraft Server`.
-     */
-    defaultMotd: string;
-    /**
-     * Whether to force the gamemode on players when they join. Defaults to `false`.
-     */
-    forceGamemode: boolean;
-    /**
-     * The gamemode to set players to when they join. Defaults to `survival`.
-     */
-    gamemode: 'adventure' | 'creative' | 'spectator' | 'survival';
-    /**
-     * Whether to hide the sample of online players in the server list. Defaults to `false`.
-     */
-    hideOnlinePlayers: boolean;
-    /**
-     * The maximum amount of players that can be connected to the server at the same time. Can be changed at runtime. Defaults to `20`.
-     */
-    maxPlayers: number;
-    /**
-     * The port to listen on. Defaults to `25565`.
-     */
-    port: number;
-  };
-  /**
-   * Information about the Minecraft version the server is running. Defaults to `1.20.2`.
-   */
-  version: {
-    /**
-     * The name of the Minecraft version or server software. Defaults to `1.20.2`.
-     */
-    name: string;
-    /**
-     * The protocol version of the Minecraft version or server software. Defaults to `764`.
-     */
-    protocol: number;
-  };
-}
 
 const defaultOptions: MCServerOptions = {
   connection: {
@@ -95,10 +29,13 @@ const defaultOptions: MCServerOptions = {
 
 export default class MCServer extends EventEmitter {
   private allPlayers: Player[] = [];
-  public options: MCServerOptions;
   private readonly netServer: NetServer;
 
-  public constructor(options?: RecursivePartial<MCServerOptions>) {
+  public options: MCServerOptions;
+
+  public pluginManager: PluginManager;
+
+  public constructor(options?: MCPartialServerOptions) {
     super();
 
     this.options = {
@@ -119,6 +56,8 @@ export default class MCServer extends EventEmitter {
     this.netServer = createServer({
       noDelay: this.options.connection.noDelay,
     });
+
+    this.pluginManager = new PluginManager(this);
   }
 
   public listen(port = this.options.server.port) {

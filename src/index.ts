@@ -14,7 +14,5 @@ const server = new Server({
 server.listen();
 
 server.on('serverListPing', (event) => {
-  event.setPlayers(1);
-  event.setVersionProtocol(47);
-  event.setVersionName('1.8.9');
+  event.setPlayers(1).setVersionProtocol(47).setVersionName('1.8.9');
 });

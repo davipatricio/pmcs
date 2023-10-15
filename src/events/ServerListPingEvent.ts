@@ -24,7 +24,7 @@ export default class ServerListPingEvent extends BaseEvent {
   public readonly server: MCServer;
 
   public constructor(public readonly player: Player) {
-    super(player);
+    super();
 
     this.server = player.server;
 
@@ -69,6 +69,7 @@ export default class ServerListPingEvent extends BaseEvent {
       ...this.data,
       ...data,
     };
+    return this;
   }
 
   public sendResponse() {
