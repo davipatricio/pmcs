@@ -1,28 +1,22 @@
 import type Packet from '../structures/Packet';
 import type Player from '../structures/Player';
-import { readBoolean } from '../utils/encoding/boolean';
 import { readString } from '../utils/encoding/string';
+import { readUUID } from '../utils/encoding/uuid';
 
-export function handleLoginStart(packet: Packet, _player: Player) {
+export function handleLoginStart(packet: Packet, player: Player) {
   decodeLoginStart(packet);
+
+  player.kick('§cNot implemented.');
 }
 
 function decodeLoginStart(packet: Packet) {
   const data = packet.data;
 
   const name = readString(data);
-
-  const playerHasUUID = readBoolean(data.slice(name.bytes));
-
-  let uuid: string | undefined;
-
-  if (playerHasUUID.value) {
-    uuid = readString(data.slice(name.bytes + playerHasUUID.bytes)).value;
-  }
+  const playerUuid = readUUID(data.slice(name.bytes));
 
   return {
     name: name.value,
-    playerHasUUID: playerHasUUID.value,
-    uuid,
+    uuid: playerUuid.value,
   };
 }
