@@ -1,13 +1,13 @@
 import ServerListPingEvent from '../events/ServerListPingEvent';
 import type Packet from '../structures/Packet';
 import type Player from '../structures/Player';
+import callEvents from '../utils/callEvents';
 
 export function handleStatusRequest(_packet: Packet, player: Player) {
   const event = new ServerListPingEvent(player);
 
-  if (!player.server.emit('serverListPing', event) || !event.sentResponse) {
-    event.sendResponse();
-  }
+  callEvents(player.server, 'serverListPing', event);
+  event.sendResponse();
 }
 
 export function handlePingRequest(packet: Packet, player: Player) {

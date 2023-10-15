@@ -1,6 +1,6 @@
 import { Colors } from './constants/colors';
 
-interface ChatComponent {
+export interface ChatComponent {
   bold?: boolean;
   color?: string;
   extra?: ChatComponent[];

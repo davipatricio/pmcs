@@ -3,8 +3,8 @@ import type { Socket } from 'node:net';
 import createChatComponent from '../utils/createChatComponent';
 import { writeString } from '../utils/encoding/string';
 import { writeVarInt } from '../utils/encoding/varInt';
+import type Server from './MCServer';
 import Packet from './Packet';
-import type Server from './Server';
 
 export enum PlayerState {
   Handshaking,

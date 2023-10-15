@@ -33,6 +33,13 @@ interface MCServerOptions {
    * The port to listen on. Defaults to `25565`.
    */
   port: number;
+  /**
+   * The version of the server. Defaults to `1.20.2`.
+   */
+  version: {
+    name: string;
+    protocol: number;
+  };
 }
 
 const defaultOptions: MCServerOptions = {
@@ -41,6 +48,10 @@ const defaultOptions: MCServerOptions = {
   noDelay: false,
   port: 25_565,
   defaultMotd: 'A Minecraft Server',
+  version: {
+    name: '1.20.2',
+    protocol: 764,
+  },
 };
 
 export default class MCServer extends EventEmitter {
