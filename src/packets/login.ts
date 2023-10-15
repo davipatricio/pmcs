@@ -28,6 +28,6 @@ function decodeLoginStart(packet: Packet, player: Player) {
 function setCompression(player: Player) {
   if (player.server.options.connection.compress) {
     const packet = new Packet().setID(writeVarInt(0x03)).setData(writeVarInt(256));
-    player.socket.write(packet.getBuffer());
+    player.sendPacket(packet);
   }
 }

@@ -10,7 +10,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "tsBuildInfoFile": ".tsbuildinfo"
+    "strictPropertyInitialization": false,
+    "moduleResolution": "node"
   }
 }

@@ -1,6 +1,7 @@
 import { EventEmitter } from 'node:events';
 import type { Server as NetServer, Socket } from 'node:net';
 import { createServer } from 'node:net';
+import pino from 'pino';
 import { PluginManager } from '../managers/PluginManager';
 import decidePacket from '../packets/decider';
 import type { MCServerEvents } from '../types/MCServerEvents';
@@ -13,6 +14,7 @@ const defaultOptions: MCServerOptions = {
     compress: false,
     noDelay: false,
   },
+  enableLogger: true,
   server: {
     port: 25_565,
     maxPlayers: 20,
@@ -29,10 +31,10 @@ const defaultOptions: MCServerOptions = {
 
 export default class MCServer extends EventEmitter {
   private allPlayers: Player[] = [];
-  private readonly netServer: NetServer;
+  private netServer: NetServer;
 
+  public logger?: pino.Logger;
   public options: MCServerOptions;
-
   public pluginManager: PluginManager;
 
   public constructor(options?: MCPartialServerOptions) {
@@ -43,6 +45,7 @@ export default class MCServer extends EventEmitter {
         ...defaultOptions.connection,
         ...options?.connection,
       },
+      enableLogger: options?.enableLogger ?? defaultOptions.enableLogger,
       server: {
         ...defaultOptions.server,
         ...options?.server,
@@ -53,15 +56,15 @@ export default class MCServer extends EventEmitter {
       },
     };
 
-    this.netServer = createServer({
-      noDelay: this.options.connection.noDelay,
-    });
+    this.setup();
 
-    this.pluginManager = new PluginManager(this);
+    this.logger?.info('Server initialized.');
   }
 
   public listen(port = this.options.server.port) {
-    this.netServer.listen(port, () => console.log(`Server started on port ${port}`));
+    this.netServer.listen(port, () => {
+      this.logger?.info(`Server listening on port ${port}.`);
+    });
 
     this.netServer.on('connection', (socket: Socket) => {
       const player = new Player(socket, this);
@@ -75,6 +78,25 @@ export default class MCServer extends EventEmitter {
         this.allPlayers.splice(this.allPlayers.indexOf(player), 1);
       });
     });
+  }
+
+  protected setup() {
+    this.netServer = createServer({
+      noDelay: this.options.connection.noDelay,
+    });
+
+    this.pluginManager = new PluginManager(this);
+
+    if (this.options.enableLogger) {
+      this.logger = pino({
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+          },
+        },
+      });
+    }
   }
 
   public get players() {

@@ -15,5 +15,9 @@
 		"prettier": "^3.0.3",
 		"tsup": "^7.2.0",
 		"typescript": "^5.2.2"
+	},
+	"dependencies": {
+		"pino": "^8.16.0",
+		"pino-pretty": "^10.2.3"
 	}
 }

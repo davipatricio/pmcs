@@ -19,6 +19,10 @@ export interface MCServerOptions {
     noDelay: boolean;
   };
   /**
+   * Whether to enable the logger. Defaults to `true`.
+   */
+  enableLogger: boolean;
+  /**
    * Options related to the server.
    */
   server: {

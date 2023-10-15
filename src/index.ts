@@ -2,6 +2,7 @@ import Server from './structures/MCServer';
 
 const server = new Server({
   connection: {
+    compress: false,
     noDelay: true,
   },
   server: {

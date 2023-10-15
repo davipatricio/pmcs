@@ -32,7 +32,7 @@ export default class Player extends EventEmitter {
   public uuid: string = '';
 
   public constructor(
-    public readonly socket: Socket,
+    private readonly socket: Socket,
     public readonly server: Server,
   ) {
     super();
