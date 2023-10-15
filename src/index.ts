@@ -5,7 +5,7 @@ const server = new Server({
     noDelay: true,
   },
   server: {
-    defaultMotd: '§a§nPMCS§r§a on §b§lMinecraft 1.8.9!',
+    defaultMotd: '§7A Minecraft Server',
     hideOnlinePlayers: true,
     maxPlayers: 100,
   },
@@ -14,5 +14,5 @@ const server = new Server({
 server.listen();
 
 server.on('serverListPing', (event) => {
-  event.setPlayers(1).setVersionProtocol(47).setVersionName('1.8.9');
+  event.setPlayers(1).setVersionProtocol(764).setVersionName('1.20.2');
 });
