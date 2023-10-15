@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import type { Socket } from 'node:net';
-import createChatComponent from '../utils/createChatComponent';
+import { createChatComponent } from '../utils/chatComponent';
 import { writeString } from '../utils/encoding/string';
 import { writeVarInt } from '../utils/encoding/varInt';
 import type Server from './MCServer';
