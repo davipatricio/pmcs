@@ -26,10 +26,14 @@ export default class Player extends EventEmitter {
    * The name of the current player. Empty string if user is not logged in (state not `Play`).
    */
   public username: string = '';
+  /**
+   * The UUID of the current player. Empty string if user is not logged in (state not `Play`).
+   */
+  public uuid: string = '';
 
   public constructor(
-    public socket: Socket,
-    public server: Server,
+    public readonly socket: Socket,
+    public readonly server: Server,
   ) {
     super();
   }
@@ -50,6 +54,13 @@ export default class Player extends EventEmitter {
    */
   public setUsername(username: string) {
     this.username = username;
+  }
+
+  /**
+   * Sets the player's UUID. Should not be changed manually.
+   */
+  public setUUID(uuid: string) {
+    this.uuid = uuid;
   }
 
   /**

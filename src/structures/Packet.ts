@@ -2,13 +2,10 @@ import { Buffer } from 'node:buffer';
 import { readVarInt, writeVarInt } from '../utils/encoding/varInt';
 
 export default class Packet {
-  public id: number = 0;
-  public data: number[] = [];
-
-  public constructor(id?: number, data?: number[]) {
-    this.id = id ?? this.id;
-    this.data = data ?? this.data;
-  }
+  public constructor(
+    public id = 0,
+    public data: number[] = [],
+  ) {}
 
   public setID(id: number[]) {
     this.id = readVarInt(id).value;
