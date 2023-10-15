@@ -1,13 +1,20 @@
 import Server from './structures/MCServer';
 
-const server = new Server();
+const server = new Server({
+  connection: {
+    noDelay: true,
+  },
+  server: {
+    defaultMotd: '§a§nPMCS§r§a on §b§lMinecraft 1.8.9!',
+    hideOnlinePlayers: true,
+    maxPlayers: 100,
+  },
+});
 
 server.listen();
 
 server.on('serverListPing', (event) => {
-  event.setMaxPlayers(100);
   event.setPlayers(1);
-  event.setDescription('§a§nPMCS§r§a on §b§lMinecraft 1.8.9!');
   event.setVersionProtocol(47);
   event.setVersionName('1.8.9');
 });
