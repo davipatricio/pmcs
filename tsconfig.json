@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "incremental": true,
     "target": "ESNext",
     "module": "ESNext",
     "declaration": false,
@@ -12,5 +11,8 @@
     "noFallthroughCasesInSwitch": true,
     "strictPropertyInitialization": false,
     "moduleResolution": "node"
-  }
+  },
+  "include": [
+    "*.ts"
+  ]
 }

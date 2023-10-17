@@ -1,23 +1,25 @@
 {
-	"name": "pmcs",
-	"type": "module",
-	"scripts": {
-		"build": "pnpm run lint && pnpm run typecheck && tsup",
-		"dev": "tsup --watch --onSuccess \"node dist/index.js\"",
-		"typecheck": "tsc",
-		"lint": "eslint . --cache --ext .ts"
-	},
-	"devDependencies": {
-		"@types/node": "^20.8.6",
-		"eslint": "^8.51.0",
-		"eslint-config-neon": "^0.1.57",
-		"eslint-plugin-prettier": "^5.0.1",
-		"prettier": "^3.0.3",
-		"tsup": "^7.2.0",
-		"typescript": "^5.2.2"
-	},
-	"dependencies": {
-		"pino": "^8.16.0",
-		"pino-pretty": "^10.2.3"
-	}
+  "name": "@pmcs/pmcs",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo run lint && turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.6",
+    "eslint": "^8.51.0",
+    "eslint-config-neon": "^0.1.57",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
+    "turbo": "^1.10.15",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "pino": "^8.16.0",
+    "pino-pretty": "^10.2.3"
+  }
 }

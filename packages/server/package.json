@@ -1,0 +1,29 @@
+{
+	"name": "@pmcs/server",
+	"version": "1.0.0",
+	"description": "PMCS is a Minecraft server written in TypeScript",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch --onSuccess \"node dist/index.js\"",
+		"typecheck": "tsc",
+		"lint": "eslint . --cache --ext .ts"
+	},
+	"devDependencies": {
+		"@types/node": "^20.8.6",
+		"eslint": "^8.51.0",
+		"eslint-config-neon": "^0.1.57",
+		"eslint-plugin-prettier": "^5.0.1",
+		"prettier": "^3.0.3",
+		"tsup": "^7.2.0",
+		"typescript": "^5.2.2"
+	},
+	"dependencies": {
+		"@pmcs/chat": "workspace:^",
+		"@pmcs/encoding": "workspace:^",
+		"pino": "^8.16.0",
+		"pino-pretty": "^10.2.3"
+	}
+}

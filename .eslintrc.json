@@ -10,15 +10,27 @@
     "prettier"
   ],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": [
+      "./tsconfig.json",
+      "packages/*/tsconfig.json"
+    ]
   },
   "ignorePatterns": [
     "**/dist/*"
   ],
   "rules": {
     "prettier/prettier": "error",
-    "@typescript-eslint/lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
-    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/lines-between-class-members": [
+      "error",
+      "always",
+      {
+        "exceptAfterSingleLine": true
+      }
+    ],
+    "@typescript-eslint/consistent-type-definitions": [
+      "error",
+      "interface"
+    ],
     "import/extensions": "off"
   }
 }

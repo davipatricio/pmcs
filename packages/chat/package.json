@@ -1,0 +1,23 @@
+{
+  "name": "@pmcs/chat",
+  "version": "1.0.0",
+  "description": "Encode and decode chat messages",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc",
+    "lint": "eslint . --cache --ext .ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.6",
+    "eslint": "^8.51.0",
+    "eslint-config-neon": "^0.1.57",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2"
+  }
+}

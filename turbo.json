@@ -1,0 +1,29 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "pnpm-lock.yaml",
+    "**/tsconfig.json",
+    "**/.eslintrc.json",
+    "**/tsup.config.ts",
+    "turbo.json",
+    "package.json",
+    ".prettierrc.json",
+    "**/.prettierignore"
+  ],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["**/*.ts"],
+      "outputs": ["dist/**"]
+    },  
+    "lint": {
+      "dependsOn": ["^lint"],
+      "inputs": [".eslintcache", "**/*.ts"],
+      "outputs": [".eslintcache", "**/*.ts"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
