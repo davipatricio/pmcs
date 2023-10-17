@@ -11,6 +11,7 @@ export enum PlayerState {
   Status,
   Login,
   Play,
+  Configuration,
 }
 
 interface PlayerEvents {
@@ -69,6 +70,15 @@ export default class Player extends EventEmitter {
    * @param packet - The packet to send to the player.
    */
   public sendPacket(packet: Packet) {
+    // console.log(`State: ${this.state} | Sending packet ${packet.id} with ${packet.length} bytes of data.`);
+    if (this.socket.closed) {
+      return;
+    }
+
+    console.log(
+      `[SEND] State: ${this.state} | Packet 0x${packet.id.toString(16)} with ${packet.length} bytes of data.`,
+    );
+
     this.socket.write(packet.getBuffer());
   }
 
