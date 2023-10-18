@@ -1,19 +1,11 @@
-import type { Packet } from '../structures/Packet';
+import type { RawPacket } from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 import { handleHandshake } from './handshake';
 import { handleLoginAcknowledge, handleLoginStart } from './login';
 import { handleLegacyPing, handlePingRequest, handleStatusRequest } from './status';
 
-const numberToHex = (number: number) => `0x${number.toString(16)}`;
-
-export default function decidePacket(packet: Packet, player: Player) {
-  console.log(
-    `[RECEIVE] State: ${PlayerState[player.state]} | Packet ${numberToHex(packet.id)} with ${
-      packet.length
-    } bytes of data.`,
-  );
-
+export default function decidePacket(packet: RawPacket, player: Player) {
   switch (player.state) {
     case PlayerState.Handshaking: {
       handleHandshakingPackets(packet, player);
@@ -40,7 +32,7 @@ export default function decidePacket(packet: Packet, player: Player) {
   }
 }
 
-function handleHandshakingPackets(packet: Packet, player: Player) {
+function handleHandshakingPackets(packet: RawPacket, player: Player) {
   switch (packet.id) {
     case 0x00:
       handleHandshake(packet, player);
@@ -54,7 +46,7 @@ function handleHandshakingPackets(packet: Packet, player: Player) {
   }
 }
 
-function handleStatusPackets(packet: Packet, player: Player) {
+function handleStatusPackets(packet: RawPacket, player: Player) {
   switch (packet.id) {
     case 0x00:
       handleStatusRequest(packet, player);
@@ -65,7 +57,7 @@ function handleStatusPackets(packet: Packet, player: Player) {
   }
 }
 
-function handleLoginPackets(packet: Packet, player: Player) {
+function handleLoginPackets(packet: RawPacket, player: Player) {
   switch (packet.id) {
     case 0x00:
       handleLoginStart(packet, player);
