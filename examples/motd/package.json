@@ -1,6 +1,7 @@
 {
   "name": "pmcs-motd-example",
   "private": true,
+  "type": "module",
   "main": "server.js",
   "dependencies": {
     "@pmcs/server": "workspace:^"

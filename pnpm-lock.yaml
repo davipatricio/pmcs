@@ -88,6 +88,43 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
+  packages/packets:
+    dependencies:
+      '@pmcs/chat':
+        specifier: workspace:^
+        version: link:../chat
+      '@pmcs/encoding':
+        specifier: workspace:^
+        version: link:../encoding
+      pino:
+        specifier: ^8.16.0
+        version: 8.16.0
+      pino-pretty:
+        specifier: ^10.2.3
+        version: 10.2.3
+    devDependencies:
+      '@types/node':
+        specifier: ^20.8.6
+        version: 20.8.6
+      eslint:
+        specifier: ^8.51.0
+        version: 8.51.0
+      eslint-config-neon:
+        specifier: ^0.1.57
+        version: 0.1.57(eslint@8.51.0)(svelte@3.59.2)(typescript@5.2.2)
+      eslint-plugin-prettier:
+        specifier: ^5.0.1
+        version: 5.0.1(eslint@8.51.0)(prettier@3.0.3)
+      prettier:
+        specifier: ^3.0.3
+        version: 3.0.3
+      tsup:
+        specifier: ^7.2.0
+        version: 7.2.0(typescript@5.2.2)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
   packages/server:
     dependencies:
       '@pmcs/chat':
@@ -96,6 +133,9 @@ importers:
       '@pmcs/encoding':
         specifier: workspace:^
         version: link:../encoding
+      '@pmcs/packets':
+        specifier: workspace:^
+        version: link:../packets
       pino:
         specifier: ^8.16.0
         version: 8.16.0

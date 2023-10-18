@@ -1,7 +1,7 @@
 {
-	"name": "@pmcs/server",
+	"name": "@pmcs/packets",
 	"version": "1.0.0",
-	"description": "PMCS is a Minecraft server written in TypeScript",
+	"description": "Easily create and parse Minecraft packets.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"type": "module",
@@ -23,7 +23,6 @@
 	"dependencies": {
 		"@pmcs/chat": "workspace:^",
 		"@pmcs/encoding": "workspace:^",
-		"@pmcs/packets": "workspace:^",
 		"pino": "^8.16.0",
 		"pino-pretty": "^10.2.3"
 	}
