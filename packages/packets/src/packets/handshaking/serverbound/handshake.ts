@@ -1,8 +1,9 @@
 import { Buffer } from 'node:buffer';
-import { readVarInt, readString, readShort } from '@pmcs/encoding';
+import { readShort, readString, readVarInt } from '@pmcs/encoding';
 import { RawPacket } from '../../../structures/RawPacket';
+import type { ServerboundPacket } from '../../../types/ServerboundPacket';
 
-export class HandshakingServerboundHandshakePacket extends RawPacket {
+export class HandshakingServerboundHandshakePacket extends RawPacket implements ServerboundPacket {
   public protocolVersion: number;
   public serverAddress: string;
   public serverPort: number;

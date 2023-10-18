@@ -1,6 +1,7 @@
 import { type ChatComponent } from '@pmcs/chat';
 import { writeString } from '@pmcs/encoding';
 import { RawPacket } from '../../../structures/RawPacket';
+import type { ClientboundPacket } from '../../../types/ClientboundPacket';
 
 export interface StatusResponsePacketData {
   description: ChatComponent;
@@ -21,7 +22,7 @@ export interface StatusResponsePacketData {
   };
 }
 
-export class StatusClientboundStatusResponsePacket extends RawPacket {
+export class StatusClientboundStatusResponsePacket extends RawPacket implements ClientboundPacket {
   public payload: StatusResponsePacketData;
 
   public constructor(data?: StatusResponsePacketData) {
