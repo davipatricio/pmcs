@@ -1,7 +1,7 @@
 import type { Socket } from 'node:net';
 import { createChatComponent } from '@pmcs/chat';
-import { writeString, writeVarInt } from '@pmcs/encoding';
-import { RawPacket } from '@pmcs/packets';
+import type { RawPacket } from '@pmcs/packets';
+import { LoginClientboundDisconnectPacket, PlayClientboundDisconnectPacket } from '@pmcs/packets';
 import PlayerQuitEvent from '../events/PlayerQuitEvent';
 import callEvents from '../utils/callEvents';
 import type { MCServer } from './MCServer';
@@ -84,13 +84,19 @@ export class Player {
   public kick(reason: string) {
     this._forcedDisconnect = true;
 
-    const reasonComponent = writeString(JSON.stringify(createChatComponent(reason)));
+    const reasonComponent = createChatComponent(reason);
 
-    const packet = new RawPacket()
-      .setID(writeVarInt(this.state === PlayerState.Login ? 0x00 : 0x1a))
-      .setData(reasonComponent);
+    switch (this.state) {
+      case PlayerState.Play:
+        this.sendPacket(new PlayClientboundDisconnectPacket(reasonComponent));
+        break;
+      case PlayerState.Login:
+        this.sendPacket(new LoginClientboundDisconnectPacket(reasonComponent));
+        break;
+      default:
+        break;
+    }
 
-    this.sendPacket(packet);
     this.disconnect();
 
     const quitEvent = new PlayerQuitEvent(this, { wasKicked: true, reason });

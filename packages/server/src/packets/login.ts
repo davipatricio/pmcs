@@ -10,19 +10,19 @@ import {
   writeUUID,
   writeVarInt,
 } from '@pmcs/encoding';
-import { Packet } from '../structures/Packet';
+import { RawPacket } from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 
-export function handleLoginStart(packet: Packet, player: Player) {
+export function handleLoginStart(packet: RawPacket, player: Player) {
   decodeLoginStart(packet, player);
 }
 
-export function handleLoginAcknowledge(_packet: Packet, player: Player) {
+export function handleLoginAcknowledge(_packet: RawPacket, player: Player) {
   player.setState(PlayerState.Configuration);
 }
 
-function decodeLoginStart(packet: Packet, player: Player) {
+function decodeLoginStart(packet: RawPacket, player: Player) {
   const data = packet.data;
 
   const name = readString(data);
@@ -43,14 +43,14 @@ function decodeLoginStart(packet: Packet, player: Player) {
   setCompression(player);
 
   // login success test
-  const packet2 = new Packet()
+  const packet2 = new RawPacket()
     .setID(writeVarInt(0x02))
     .setData([...writeUUID(player.uuid), ...writeString(player.username), ...writeVarInt(0)]);
 
   player.sendPacket(packet2);
 
   // set player state to play
-  const loginPlayPacket = new Packet().setID(writeVarInt(0x29)).setData([
+  const loginPlayPacket = new RawPacket().setID(writeVarInt(0x29)).setData([
     // entity id
     ...writeInt(1),
     // is hardcore
@@ -94,12 +94,12 @@ function decodeLoginStart(packet: Packet, player: Player) {
   player.sendPacket(loginPlayPacket);
 
   // SET HELD ITEM
-  player.sendPacket(new Packet().setID(writeVarInt(0x2b)).setData([...writeVarInt(1)]));
+  player.sendPacket(new RawPacket().setID(writeVarInt(0x2b)).setData([...writeVarInt(1)]));
 }
 
 function setCompression(player: Player) {
   if (player.server.options.connection.compress) {
-    const packet = new Packet().setID(writeVarInt(0x03)).setData(writeVarInt(256));
+    const packet = new RawPacket().setID(writeVarInt(0x03)).setData(writeVarInt(256));
     player.sendPacket(packet);
   }
 }

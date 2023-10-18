@@ -1,5 +1,5 @@
 export abstract class ClientboundPacket {
-  public abstract payload: Record<string, unknown> | object;
+  public abstract payload: unknown;
 
   public encode() {}
 
