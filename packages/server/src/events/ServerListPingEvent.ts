@@ -1,25 +1,14 @@
 import type { ChatComponent } from '@pmcs/chat';
 import { createChatComponent } from '@pmcs/chat';
-import { writeString, writeVarInt } from '@pmcs/encoding';
+import type { StatusResponsePacketData } from '@pmcs/packets';
+import { StatusClientboundStatusResponsePacket } from '@pmcs/packets';
 import type { MCServer } from '../structures/MCServer';
-import { Packet } from '../structures/Packet';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 import BaseEvent from './BaseEvent';
 
-interface ServerListPingEventData {
-  description: ChatComponent;
-  maxPlayers: number;
-  players: number;
-  version: {
-    name: string;
-    protocol: number;
-  };
-}
-
 export default class ServerListPingEvent extends BaseEvent {
-  public data: ServerListPingEventData;
-
+  public readonly data: StatusResponsePacketData;
   public readonly server: MCServer;
 
   public constructor(public readonly player: Player) {
@@ -28,8 +17,10 @@ export default class ServerListPingEvent extends BaseEvent {
     this.server = player.server;
 
     this.data = {
-      players: this.server.players.length,
-      maxPlayers: this.server.options.server.maxPlayers,
+      players: {
+        max: this.server.options.server.maxPlayers,
+        online: this.server.players.length,
+      },
       description: createChatComponent(this.server.options.server.defaultMotd),
       version: {
         name: this.server.options.version.name,
@@ -39,12 +30,12 @@ export default class ServerListPingEvent extends BaseEvent {
   }
 
   public setMaxPlayers(maxPlayers: number) {
-    this.data.maxPlayers = maxPlayers;
+    this.data.players.max = maxPlayers;
     return this;
   }
 
   public setPlayers(players: number) {
-    this.data.players = players;
+    this.data.players.online = players;
     return this;
   }
 
@@ -63,11 +54,8 @@ export default class ServerListPingEvent extends BaseEvent {
     return this;
   }
 
-  public setData(data: Partial<ServerListPingEventData>) {
-    this.data = {
-      ...this.data,
-      ...data,
-    };
+  public setData(data: Partial<StatusResponsePacketData>) {
+    Object.assign(this.data, data);
     return this;
   }
 
@@ -76,30 +64,7 @@ export default class ServerListPingEvent extends BaseEvent {
       throw new Error('Player is not in status state.');
     }
 
-    const data = {
-      version: {
-        name: this.data.version.name,
-        protocol: this.data.version.protocol,
-      },
-      enforcesSecureChat: true,
-      previewsChat: true,
-      players: {
-        max: this.data.maxPlayers ?? this.server.options.server.maxPlayers,
-        online: this.data.players ?? this.server.players.length,
-        sample: this.server.options.server.hideOnlinePlayers
-          ? []
-          : [
-              {
-                name: 'whoisveric',
-                id: '0402d80a-fe57-44eb-8134-8d4988b74bf5',
-              },
-            ],
-      },
-      description: this.data.description,
-    };
-
-    const packet = new Packet().setID(writeVarInt(0x00)).setData(writeString(JSON.stringify(data)));
-
+    const packet = new StatusClientboundStatusResponsePacket(this.data);
     this.player.sendPacket(packet);
   }
 }
