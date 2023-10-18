@@ -1,12 +1,14 @@
 import { EventEmitter } from 'node:events';
 import type { Server as NetServer, Socket } from 'node:net';
 import { createServer } from 'node:net';
+import { RawPacket } from '@pmcs/packets';
 import pino from 'pino';
+import PlayerQuitEvent from '../events/PlayerQuitEvent';
 import { PluginManager } from '../managers/PluginManager';
 import decidePacket from '../packets/decider';
 import type { MCServerEvents } from '../types/MCServerEvents';
 import type { MCPartialServerOptions, MCServerOptions } from '../types/MCServerOptions';
-import { Packet } from './Packet';
+import callEvents from '../utils/callEvents';
 import { Player, PlayerState } from './Player';
 
 const defaultOptions: MCServerOptions = {
@@ -71,11 +73,15 @@ export class MCServer extends EventEmitter {
       this.allPlayers.push(player);
 
       socket.on('data', (data) => {
-        for (const packet of Packet.fromBuffer(data)) decidePacket(packet, player);
+        for (const packet of RawPacket.fromBuffer(data)) decidePacket(packet, player);
       });
 
-      socket.on('close', () => {
+      socket.on('end', () => {
         this.allPlayers.splice(this.allPlayers.indexOf(player), 1);
+
+        if (!player._forcedDisconnect) {
+          callEvents(this, 'playerQuit', new PlayerQuitEvent(player));
+        }
       });
     });
   }

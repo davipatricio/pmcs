@@ -5,15 +5,12 @@ import { StatusClientboundStatusResponsePacket } from '@pmcs/packets';
 import type { MCServer } from '../structures/MCServer';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
-import BaseEvent from './BaseEvent';
 
-export default class ServerListPingEvent extends BaseEvent {
+export default class ServerListPingEvent {
   public readonly data: StatusResponsePacketData;
   public readonly server: MCServer;
 
   public constructor(public readonly player: Player) {
-    super();
-
     this.server = player.server;
 
     this.data = {

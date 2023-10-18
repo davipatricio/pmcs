@@ -1,5 +1,4 @@
 import type { MCServer } from '../structures/MCServer';
-import BaseEvent from './BaseEvent';
 
 interface PluginUnloadEventData {
   /**
@@ -8,11 +7,10 @@ interface PluginUnloadEventData {
   name: string;
 }
 
-export default class PluginUnloadEvent extends BaseEvent {
-  public data!: PluginUnloadEventData;
-  public constructor(public readonly server: MCServer) {
-    super();
-  }
+export default class PluginUnloadEvent {
+  public data: PluginUnloadEventData;
+
+  public constructor(public readonly server: MCServer) {}
 
   public setData(data: Partial<PluginUnloadEventData>) {
     this.data = {

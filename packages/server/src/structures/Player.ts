@@ -1,9 +1,10 @@
-import { EventEmitter } from 'node:events';
 import type { Socket } from 'node:net';
 import { createChatComponent } from '@pmcs/chat';
 import { writeString, writeVarInt } from '@pmcs/encoding';
+import { RawPacket } from '@pmcs/packets';
+import PlayerQuitEvent from '../events/PlayerQuitEvent';
+import callEvents from '../utils/callEvents';
 import type { MCServer } from './MCServer';
-import { Packet } from './Packet';
 
 export enum PlayerState {
   Handshaking,
@@ -13,11 +14,7 @@ export enum PlayerState {
   Configuration,
 }
 
-interface PlayerEvents {
-  quit(): void;
-}
-
-export class Player extends EventEmitter {
+export class Player {
   /**
    * The current state of the player.
    */
@@ -31,12 +28,15 @@ export class Player extends EventEmitter {
    */
   public uuid: string = '';
 
+  /**
+   * @internal
+   */
+  public _forcedDisconnect: boolean = false;
+
   public constructor(
     private readonly socket: Socket,
     public readonly server: MCServer,
-  ) {
-    super();
-  }
+  ) {}
 
   /**
    * Sets the player's state. Should not be changed manually.
@@ -45,6 +45,7 @@ export class Player extends EventEmitter {
    */
   public setState(state: PlayerState) {
     this.state = state;
+    return this;
   }
 
   /**
@@ -54,6 +55,7 @@ export class Player extends EventEmitter {
    */
   public setUsername(username: string) {
     this.username = username;
+    return this;
   }
 
   /**
@@ -61,6 +63,7 @@ export class Player extends EventEmitter {
    */
   public setUUID(uuid: string) {
     this.uuid = uuid;
+    return this;
   }
 
   /**
@@ -68,16 +71,8 @@ export class Player extends EventEmitter {
    *
    * @param packet - The packet to send to the player.
    */
-  public sendPacket(packet: Packet) {
-    // console.log(`State: ${this.state} | Sending packet ${packet.id} with ${packet.length} bytes of data.`);
-    if (this.socket.closed) {
-      return;
-    }
-
-    console.log(
-      `[SEND] State: ${this.state} | Packet 0x${packet.id.toString(16)} with ${packet.length} bytes of data.`,
-    );
-
+  public sendPacket(packet: RawPacket) {
+    if (this.socket.closed) return;
     this.socket.write(packet.getBuffer());
   }
 
@@ -87,30 +82,26 @@ export class Player extends EventEmitter {
    * @param reason - The reason the player is being kicked. e.g. `§cYou have been kicked.`
    */
   public kick(reason: string) {
-    const packet = new Packet()
+    this._forcedDisconnect = true;
+
+    const reasonComponent = writeString(JSON.stringify(createChatComponent(reason)));
+
+    const packet = new RawPacket()
       .setID(writeVarInt(this.state === PlayerState.Login ? 0x00 : 0x1a))
-      .setData(writeString(JSON.stringify(createChatComponent(reason))));
+      .setData(reasonComponent);
 
     this.sendPacket(packet);
     this.disconnect();
+
+    const quitEvent = new PlayerQuitEvent(this, { wasKicked: true, reason });
+    callEvents(this.server, 'playerQuit', quitEvent);
   }
 
   /**
    * Drops the connection with the player immediately.
    */
   public disconnect() {
+    if (this.socket.closed) return;
     this.socket.destroy();
-  }
-
-  public on<T extends keyof PlayerEvents>(event: T, listener: PlayerEvents[T]): this {
-    return super.on(event, listener);
-  }
-
-  public once<T extends keyof PlayerEvents>(event: T, listener: PlayerEvents[T]): this {
-    return super.once(event, listener);
-  }
-
-  public emit<T extends keyof PlayerEvents>(event: T, ...args: Parameters<PlayerEvents[T]>): boolean {
-    return super.emit(event, ...args);
   }
 }

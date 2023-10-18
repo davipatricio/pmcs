@@ -1,5 +1,4 @@
 import type { MCServer } from '../structures/MCServer';
-import BaseEvent from './BaseEvent';
 
 interface PluginLoadEventData {
   /**
@@ -8,11 +7,10 @@ interface PluginLoadEventData {
   name: string;
 }
 
-export default class PluginLoadEvent extends BaseEvent {
-  public data!: PluginLoadEventData;
-  public constructor(public readonly server: MCServer) {
-    super();
-  }
+export default class PluginLoadEvent {
+  public data: PluginLoadEventData;
+
+  public constructor(public readonly server: MCServer) {}
 
   public setData(data: Partial<PluginLoadEventData>) {
     this.data = {
