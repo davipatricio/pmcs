@@ -7,10 +7,9 @@ import {
   writeLong,
   writeString,
   writeUnsignedByte,
-  writeUUID,
   writeVarInt,
 } from '@pmcs/encoding';
-import { RawPacket } from '@pmcs/packets';
+import { LoginClientboundLoginSuccessPacket, RawPacket } from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 
@@ -43,11 +42,13 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
   setCompression(player);
 
   // login success test
-  const packet2 = new RawPacket()
-    .setID(writeVarInt(0x02))
-    .setData([...writeUUID(player.uuid), ...writeString(player.username), ...writeVarInt(0)]);
+  const loginSuccess = new LoginClientboundLoginSuccessPacket({
+    username: player.username,
+    uuid: player.uuid,
+    properties: [],
+  });
 
-  player.sendPacket(packet2);
+  player.sendPacket(loginSuccess);
 
   // set player state to play
   const loginPlayPacket = new RawPacket().setID(writeVarInt(0x29)).setData([

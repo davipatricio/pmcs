@@ -16,7 +16,7 @@ export class LoginClientboundDisconnectPacket extends RawPacket implements Clien
     this.encode();
   }
 
-  // hhttps://wiki.vg/Protocol#Disconnect_.28login.29
+  // https://wiki.vg/Protocol#Disconnect_.28login.29
   public encode() {
     if (typeof this.payload === 'string') {
       this.setData(writeString(JSON.stringify({ text: this.payload })));
