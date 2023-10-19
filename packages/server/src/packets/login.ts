@@ -10,8 +10,10 @@ import {
   writeVarInt,
 } from '@pmcs/encoding';
 import { LoginClientboundLoginSuccessPacket, RawPacket, LoginClientboundSetCompressionPacket } from '@pmcs/packets';
+import { P } from 'pino';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
+import { PlayClientboundSetHeldItemPacket } from '@pmcs/packets';
 
 export function handleLoginStart(packet: RawPacket, player: Player) {
   decodeLoginStart(packet, player);
@@ -39,7 +41,7 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
   const playerWithSameName = player.server.players.find((oldPlayer) => oldPlayer.username === player.username);
   playerWithSameName?.kick('§cYou logged in from another location.');
 
-  setCompression(player);
+  enableCompression(player);
 
   // login success test
   const loginSuccess = new LoginClientboundLoginSuccessPacket({
@@ -47,7 +49,6 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
     uuid: player.uuid,
     properties: [],
   });
-
   player.sendPacket(loginSuccess);
 
   // set player state to play
@@ -94,11 +95,11 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
 
   player.sendPacket(loginPlayPacket);
 
-  // SET HELD ITEM
-  player.sendPacket(new RawPacket().setID(writeVarInt(0x2b)).setData([...writeVarInt(1)]));
+  const setHeldItemPacket = new PlayClientboundSetHeldItemPacket({ slot: 0 });
+  player.sendPacket(setHeldItemPacket);
 }
 
-function setCompression(player: Player) {
+function enableCompression(player: Player) {
   if (player.server.options.connection.compress) {
     const compressionPacket = new LoginClientboundSetCompressionPacket({ threshold: 256 });
     player.sendPacket(compressionPacket);
