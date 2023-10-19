@@ -17,9 +17,9 @@ pmcs aims to be fully compatible with the latest version of Minecraft (1.20.2 at
 ## Example
 
 ```js
-import { Server } from 'pmcs';
+import { MCServer } from '@pmcs/server';
 
-const server = new Server();
+const server = new MCServer();
 
 server.on('serverListPing', (event) => {
   event.setMaxPlayers(2000).setDescription('§aPMCS - A performant Minecraft server');
