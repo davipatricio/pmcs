@@ -15,11 +15,13 @@
       "dependsOn": ["^build"],
       "inputs": ["**/*.ts"],
       "outputs": ["dist/**"]
-    },  
+    },
     "lint": {
-      "dependsOn": ["^lint"],
       "inputs": [".eslintcache", "**/*.ts"],
       "outputs": [".eslintcache", "**/*.ts"]
+    },
+    "typecheck": {
+      "inputs": ["**/*.ts"]
     },
     "dev": {
       "cache": false,

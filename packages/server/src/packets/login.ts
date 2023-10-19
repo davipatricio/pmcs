@@ -9,11 +9,14 @@ import {
   writeUnsignedByte,
   writeVarInt,
 } from '@pmcs/encoding';
-import { LoginClientboundLoginSuccessPacket, RawPacket, LoginClientboundSetCompressionPacket } from '@pmcs/packets';
-import { P } from 'pino';
+import {
+  LoginClientboundLoginSuccessPacket,
+  RawPacket,
+  LoginClientboundSetCompressionPacket,
+  PlayClientboundSetHeldItemPacket,
+} from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
-import { PlayClientboundSetHeldItemPacket } from '@pmcs/packets';
 
 export function handleLoginStart(packet: RawPacket, player: Player) {
   decodeLoginStart(packet, player);
