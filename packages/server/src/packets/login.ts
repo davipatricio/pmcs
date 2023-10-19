@@ -9,7 +9,7 @@ import {
   writeUnsignedByte,
   writeVarInt,
 } from '@pmcs/encoding';
-import { LoginClientboundLoginSuccessPacket, RawPacket } from '@pmcs/packets';
+import { LoginClientboundLoginSuccessPacket, RawPacket, LoginClientboundSetCompressionPacket } from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 
@@ -100,7 +100,7 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
 
 function setCompression(player: Player) {
   if (player.server.options.connection.compress) {
-    const packet = new RawPacket().setID(writeVarInt(0x03)).setData(writeVarInt(256));
-    player.sendPacket(packet);
+    const compressionPacket = new LoginClientboundSetCompressionPacket({ threshold: 256 });
+    player.sendPacket(compressionPacket);
   }
 }

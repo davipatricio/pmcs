@@ -18,15 +18,11 @@ export class LoginClientboundDisconnectPacket extends RawPacket implements Clien
 
   // https://wiki.vg/Protocol#Disconnect_.28login.29
   public encode() {
-    if (typeof this.payload === 'string') {
-      this.setData(writeString(JSON.stringify({ text: this.payload })));
-    }
-
     this.setData(writeString(JSON.stringify(this.payload)));
     return this;
   }
 
   public toJSON() {
-    return typeof this.payload === 'string' ? { text: this.payload } : this.payload;
+    return this.payload;
   }
 }

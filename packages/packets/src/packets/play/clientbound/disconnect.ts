@@ -6,7 +6,7 @@ import type { ClientboundPacket } from '../../../types/ClientboundPacket';
 /**
  * A string containing the reason for the disconnect or a Chat component.
  */
-export type DisconnectReasonData = ChatComponent | string;
+export type DisconnectReasonData = ChatComponent;
 
 export class PlayClientboundDisconnectPacket extends RawPacket implements ClientboundPacket {
   public payload: DisconnectReasonData;
@@ -23,15 +23,11 @@ export class PlayClientboundDisconnectPacket extends RawPacket implements Client
 
   // https://wiki.vg/Protocol#Disconnect_.28play.29
   public encode() {
-    if (typeof this.payload === 'string') {
-      this.setData(writeString(JSON.stringify({ text: this.payload })));
-    }
-
     this.setData(writeString(JSON.stringify(this.payload)));
     return this;
   }
 
   public toJSON() {
-    return typeof this.payload === 'string' ? { text: this.payload } : this.payload;
+    return this.payload;
   }
 }
