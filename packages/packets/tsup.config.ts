@@ -1,10 +1,10 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
-  entry: ['src/index.ts'],
+export default defineConfig((options) => ({
+  entry: ['src/versions/*.ts'],
   outDir: 'dist',
-  format: 'esm',
+  format: options.watch ? 'esm' : ['esm', 'cjs'],
   splitting: false,
   clean: true,
   dts: true,
-});
+}));

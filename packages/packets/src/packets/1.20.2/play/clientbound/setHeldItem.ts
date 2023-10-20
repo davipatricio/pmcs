@@ -1,6 +1,6 @@
 import { writeByte } from '@pmcs/encoding';
-import { RawPacket } from '../../../structures/RawPacket';
-import type { ClientboundPacket } from '../../../types/ClientboundPacket';
+import { RawPacket } from '../../../../structures/RawPacket';
+import type { ClientboundPacket } from '../../../../types/ClientboundPacket';
 
 export interface SetHeldItemPacketData {
   slot: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;

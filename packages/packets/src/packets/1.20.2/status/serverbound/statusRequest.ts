@@ -1,5 +1,5 @@
-import { RawPacket } from '../../../structures/RawPacket';
-import type { ServerboundPacket } from '../../../types/ServerboundPacket';
+import { RawPacket } from '@/structures/RawPacket';
+import type { ServerboundPacket } from '@/types/ServerboundPacket';
 
 export class StatusServerboundStatusRequestPacket extends RawPacket implements ServerboundPacket {
   public constructor() {
