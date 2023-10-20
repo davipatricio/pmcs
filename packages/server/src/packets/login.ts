@@ -1,6 +1,9 @@
-import { readString, readUUID } from '@pmcs/encoding';
 import type { RawPacket } from '@pmcs/packets';
-import { LoginClientboundLoginSuccessPacket, LoginClientboundSetCompressionPacket } from '@pmcs/packets';
+import {
+  LoginClientboundLoginSuccessPacket,
+  LoginClientboundSetCompressionPacket,
+  LoginServerboundLoginStartPacket,
+} from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 
@@ -15,15 +18,14 @@ export function handleLoginAcknowledge(_packet: RawPacket, player: Player) {
 function decodeLoginStart(packet: RawPacket, player: Player) {
   const data = packet.data;
 
-  const name = readString(data);
-  const playerUuid = readUUID(data.slice(name.bytes));
+  const { username, uuid } = new LoginServerboundLoginStartPacket(data);
 
-  if (name.value.length > 16) {
+  if (username.length > 16) {
     player.kick('§cYour username is too long.');
     return;
   }
 
-  player.setUsername(name.value).setUUID(playerUuid.value);
+  player.setUsername(username).setUUID(uuid);
 
   // if a player is already connected with the same name, kick the old player
   const playerWithSameName = player.server.players.find((oldPlayer) => oldPlayer.username === player.username);
