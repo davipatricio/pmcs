@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Easily create and parse Minecraft packets.",
   "type": "module",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -11,28 +12,19 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/1.20.2.js",
-      "require": "./dist/1.20.2.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./1.8": {
-      "import": "./dist/1.8.js",
-      "require": "./dist/1.8.cjs"
-    },
-    "./1.20.2": {
-      "import": "./dist/1.20.2.js",
-      "require": "./dist/1.20.2.cjs"
+    "./*": {
+      "import": "./dist/versions/*.js",
+      "require": "./dist/versions/*.cjs"
     }
   },
   "typesVersions": {
     "*": {
       "*": [
-        "./dist/1.20.2.d.ts"
-      ],
-      "1.8": [
-        "./dist/1.8.d.ts"
-      ],
-      "1.20.2": [
-        "./dist/1.20.2.d.ts"
+        "./dist/versions/*",
+        "./dist/index.d.ts"
       ]
     }
   },

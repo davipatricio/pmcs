@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import type { Server as NetServer, Socket } from 'node:net';
 import { createServer } from 'node:net';
-import { RawPacket } from '@pmcs/packets';
+import { ProtocolVersions, RawPacket } from '@pmcs/packets';
 import pino from 'pino';
 import PlayerQuitEvent from '../events/PlayerQuitEvent';
 import { PluginManager } from '../managers/PluginManager';
@@ -102,6 +102,10 @@ export class MCServer extends EventEmitter {
           },
         },
       });
+    }
+
+    if (!ProtocolVersions[this.options.version.protocol]) {
+      throw new Error(`Unsupported Minecraft version: ${this.options.version.protocol}`);
     }
   }
 
