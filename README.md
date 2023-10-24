@@ -2,7 +2,7 @@
 
 **pmcs** ('Performant Minecraft Server') is a Minecraft server written in TypeScript with the goal of being fast and lightweight. It is currently in development and is not ready for use.
 
-pmcs aims to be fully compatible with the latest version of Minecraft (1.20.2 at the time of writing). Support for older versions may be added in the future.
+pmcs aims to be fully compatible with the 1.8.9 Minecraft version and 1.20.2 Minecraft version. Support for older or newer versions may be added in the future.
 
 ## Features
 
