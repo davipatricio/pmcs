@@ -10,10 +10,14 @@ const server = new MCServer({
     hideOnlinePlayers: true,
     maxPlayers: 100,
   },
+  version: {
+    name: '1.8.9',
+    protocol: 47,
+  },
 });
 
 server.listen();
 
 server.on('serverListPing', (event) => {
-  event.setPlayers(1).setVersionProtocol(764).setVersionName('1.20.2');
+  event.setPlayers(1);
 });

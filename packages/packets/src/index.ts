@@ -3,6 +3,9 @@ import { ProtocolVersions } from './utils/protocolVersions';
 import * as v1_20_2 from './versions/1.20.2';
 import * as v1_8 from './versions/1.8';
 
+export function getVersionData(version: '1.8'): typeof v1_8;
+export function getVersionData(version: '1.20.2'): typeof v1_20_2;
+export function getVersionData(version: keyof typeof NamedProtocolVersions): typeof v1_8 | typeof v1_20_2;
 export function getVersionData(version: keyof typeof NamedProtocolVersions | keyof typeof ProtocolVersions) {
   if (typeof version === 'number') {
     return getVersionData(ProtocolVersions[version]);

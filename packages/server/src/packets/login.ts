@@ -1,9 +1,5 @@
 import type { RawPacket } from '@pmcs/packets';
-import {
-  LoginClientboundLoginSuccessPacket,
-  LoginClientboundSetCompressionPacket,
-  LoginServerboundLoginStartPacket,
-} from '@pmcs/packets';
+import { getVersionData } from '@pmcs/packets';
 import type { Player } from '../structures/Player';
 import { PlayerState } from '../structures/Player';
 
@@ -17,15 +13,16 @@ export function handleLoginAcknowledge(_packet: RawPacket, player: Player) {
 
 function decodeLoginStart(packet: RawPacket, player: Player) {
   const data = packet.data;
+  const mcData = getVersionData('1.8');
 
-  const { username, uuid } = new LoginServerboundLoginStartPacket(data);
+  const { username } = new mcData.LoginServerboundLoginStartPacket(data);
 
   if (username.length > 16) {
     player.kick('§cYour username is too long.');
     return;
   }
 
-  player.setUsername(username).setUUID(uuid);
+  player.setUsername(username);
 
   // if a player is already connected with the same name, kick the old player
   const playerWithSameName = player.server.players.find((oldPlayer) => oldPlayer.username === player.username);
@@ -43,63 +40,38 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
 }
 
 function sendLoginSuccessPacket(player: Player) {
-  const loginSuccess = new LoginClientboundLoginSuccessPacket({
+  const mcData = getVersionData('1.8');
+
+  const loginSuccess = new mcData.LoginClientboundLoginSuccessPacket({
     username: player.username,
     uuid: player.uuid,
     properties: [],
   });
+
   player.sendPacket(loginSuccess);
 }
 
-function sendLoginPlayPacket(_player: Player) {
-  /* const loginPlayPacket = new RawPacket().setID(writeVarInt(0x29)).setData([
-  // entity id
-  ...writeInt(1),
-  // is hardcore
-  ...writeBoolean(false),
-  // dimension count
-  ...writeVarInt(3),
-  // dimension
-  ...writeString('minecraft:overworld'),
-  ...writeString('minecraft:the_nether'),
-  ...writeString('minecraft:the_end'),
-  // max players
-  ...writeVarInt(100),
-  // view distance
-  ...writeVarInt(10),
-  // simulation distance
-  ...writeVarInt(10),
-  // reduced debug info
-  ...writeBoolean(false),
-  // enable respawn screen
-  ...writeBoolean(true),
-  // limited crafting
-  ...writeBoolean(false),
-  //  dimension type
-  ...writeString('minecraft:overworld'),
-  // world name
-  ...writeString('minecraft:overworld'),
-  // hashed seed (random 8 bytes)
-  ...writeLong(BigInt(123)),
-  // gmamemode
-  ...writeUnsignedByte(0),
-  // previous gamemode
-  ...writeByte(0),
-  // is debug
-  ...writeBoolean(false),
-  // is flat
-  ...writeBoolean(false),
-  // has death location
-  ...writeBoolean(false),
-  // portal cooldown
-  ...writeVarInt(0),
-]);*/
-  // player.sendPacket(loginPlayPacket);
+function sendLoginPlayPacket(player: Player) {
+  const mcData = getVersionData('1.8');
+
+  const joinGame = new mcData.PlayClientboundJoinGamePacket({
+    entityId: 10,
+    gamemode: 0,
+    dimension: 0,
+    difficulty: 0,
+    maxPlayers: 100,
+    levelType: 'default',
+    reducedDebugInfo: false,
+  });
+
+  player.sendPacket(joinGame);
 }
 
 function enableCompression(player: Player) {
+  const mcData = getVersionData('1.8');
+
   if (player.server.options.connection.compress) {
-    const compressionPacket = new LoginClientboundSetCompressionPacket({ threshold: 256 });
+    const compressionPacket = new mcData.LoginClientboundSetCompressionPacket({ threshold: 256 });
     player.sendPacket(compressionPacket);
   }
 }

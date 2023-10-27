@@ -1,4 +1,5 @@
-import { writeString, writeVarInt } from '@pmcs/encoding';
+import { writeString } from '@pmcs/encoding';
+import { v3 as uuidv3 } from 'uuid';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
 
@@ -21,9 +22,11 @@ export class LoginClientboundLoginSuccessPacket extends RawPacket implements Cli
     this.encode();
   }
 
-  // https://wiki.vg/Protocol#Login_Success
+  // https://wiki.vg/index.php?title=Protocol&oldid=7368#Login_Success
   public encode() {
-    this.setData([...writeString(this.payload.uuid), ...writeString(this.payload.username), ...writeVarInt(0)]);
+    const uuid = uuidv3('playerName', uuidv3.URL);
+
+    this.setData([...writeString(uuid), ...writeString(this.payload.username)]);
     return this;
   }
 

@@ -9,17 +9,17 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
-    "@types/node": "^20.8.6",
-    "eslint": "^8.51.0",
+    "@types/node": "^20.8.9",
+    "eslint": "^8.52.0",
     "eslint-config-neon": "^0.1.57",
     "eslint-plugin-prettier": "^5.0.1",
     "prettier": "^3.0.3",
     "tsup": "^7.2.0",
-    "turbo": "^1.10.15",
+    "turbo": "^1.10.16",
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "pino": "^8.16.0",
+    "pino": "^8.16.1",
     "pino-pretty": "^10.2.3"
   }
 }
