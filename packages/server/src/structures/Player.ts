@@ -1,9 +1,5 @@
 import type { Socket } from 'node:net';
-import { createChatComponent } from '@pmcs/chat';
 import type { RawPacket } from '@pmcs/packets';
-import { getVersionData } from '@pmcs/packets';
-import PlayerQuitEvent from '../events/PlayerQuitEvent';
-import callEvents from '../utils/callEvents';
 import type { MCServer } from './MCServer';
 
 export enum PlayerState {
@@ -44,7 +40,7 @@ export class Player {
   public readonly protocolVersion: number = 754;
 
   public constructor(
-    private readonly socket: Socket,
+    public readonly _socket: Socket,
     public readonly server: MCServer,
   ) {}
 
@@ -92,43 +88,24 @@ export class Player {
    * @param packet - The packet to send to the player.
    */
   public sendPacket(packet: RawPacket) {
-    if (this.socket.closed) return;
-    this.socket.write(packet.getBuffer());
+    if (this._socket.closed) return;
+    this._socket.write(packet.getBuffer());
   }
 
   /**
    * Kicks the player from the server with the specified reason.
    *
-   * @param reason - The reason the player is being kicked. e.g. `§cYou have been kicked.`
+   * @param _reason - The reason the player is being kicked. e.g. `§cYou have been kicked.`
    */
-  public kick(reason: string) {
-    const packets = getVersionData(this.protocolVersion);
-    const reasonComponent = createChatComponent(reason);
-
-    this._forcedDisconnect = true;
-
-    switch (this.state) {
-      case PlayerState.Play:
-        this.sendPacket(new packets.PlayClientboundDisconnectPacket(reasonComponent));
-        break;
-      case PlayerState.Login:
-        this.sendPacket(new packets.LoginClientboundDisconnectPacket(reasonComponent));
-        break;
-      default:
-        break;
-    }
-
-    this.disconnect();
-
-    const quitEvent = new PlayerQuitEvent(this, { wasKicked: true, reason });
-    callEvents(this.server, 'playerQuit', quitEvent);
+  public kick(_reason: string) {
+    throw new Error('Player not initialized correctly.');
   }
 
   /**
    * Drops the connection with the player immediately.
    */
   public disconnect() {
-    if (this.socket.closed) return;
-    this.socket.destroy();
+    if (this._socket.closed) return;
+    this._socket.destroy();
   }
 }

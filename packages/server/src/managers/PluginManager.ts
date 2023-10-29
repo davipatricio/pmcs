@@ -1,8 +1,8 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
-import PluginLoadEvent from '../events/PluginLoadEvent';
-import PluginUnloadEvent from '../events/PluginUnloadEvent';
-import type { MCServer } from '../structures/MCServer';
-import callEvents from '../utils/callEvents';
+import PluginLoadEvent from '@/events/PluginLoadEvent';
+import PluginUnloadEvent from '@/events/PluginUnloadEvent';
+import type { MCServer } from '@/structures/MCServer';
+import callEvents from '@/utils/callEvents';
 
 export interface LoadPluginCallback {
   load(server: MCServer): void;

@@ -1,5 +1,5 @@
-import type { MCServer } from '../structures/MCServer';
-import type { MCServerEvents } from '../types/MCServerEvents';
+import type { MCServer } from '@/structures/MCServer';
+import type { MCServerEvents } from '@/types/MCServerEvents';
 
 /**
  * Calls all the listeners for a given event.

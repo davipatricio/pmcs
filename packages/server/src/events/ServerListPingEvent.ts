@@ -1,10 +1,8 @@
 import type { ChatComponent } from '@pmcs/chat';
 import { createChatComponent } from '@pmcs/chat';
-import { getVersionData } from '@pmcs/packets';
 import type { StatusResponsePacketData } from '@pmcs/packets/1.20.2';
-import type { MCServer } from '../structures/MCServer';
-import type { Player } from '../structures/Player';
-import { PlayerState } from '../structures/Player';
+import type { MCServer } from '@/structures/MCServer';
+import type { Player } from '@/structures/Player';
 
 export default class ServerListPingEvent {
   public readonly data: StatusResponsePacketData;
@@ -54,16 +52,5 @@ export default class ServerListPingEvent {
   public setData(data: Partial<StatusResponsePacketData>) {
     Object.assign(this.data, data);
     return this;
-  }
-
-  public sendResponse() {
-    const packets = getVersionData(this.player.protocolVersion);
-
-    if (this.player.state !== PlayerState.Status) {
-      throw new Error('Player is not in status state.');
-    }
-
-    const packet = new packets.StatusClientboundStatusResponsePacket(this.data);
-    this.player.sendPacket(packet);
   }
 }

@@ -1,4 +1,4 @@
-import type { Player } from '../structures/Player';
+import type { Player } from '@/structures/Player';
 
 interface PlayerQuitEventData {
   reason?: string | null;

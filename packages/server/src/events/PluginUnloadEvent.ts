@@ -1,4 +1,4 @@
-import type { MCServer } from '../structures/MCServer';
+import type { MCServer } from '@/structures/MCServer';
 
 interface PluginUnloadEventData {
   /**

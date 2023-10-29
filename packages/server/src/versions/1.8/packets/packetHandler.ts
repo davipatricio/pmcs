@@ -1,11 +1,11 @@
 import type { RawPacket } from '@pmcs/packets';
-import type { Player } from '../structures/Player';
-import { PlayerState } from '../structures/Player';
+import type { Player } from '../../../structures/Player';
+import { PlayerState } from '../../../structures/Player';
 import { handleHandshake } from './handshake';
 import { handleLoginAcknowledge, handleLoginStart } from './login';
 import { handleLegacyPing, handlePingRequest, handleStatusRequest } from './status';
 
-export default function decidePacket(packet: RawPacket, player: Player) {
+export default function handlePacket(packet: RawPacket, player: Player) {
   switch (player.state) {
     case PlayerState.Handshaking: {
       handleHandshakingPackets(packet, player);

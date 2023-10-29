@@ -3,5 +3,12 @@
     "*.ts",
     "src/**/*.ts"
   ],
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
   "extends": "../../tsconfig.json"
 }

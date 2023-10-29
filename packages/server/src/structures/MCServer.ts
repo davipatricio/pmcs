@@ -3,13 +3,14 @@ import type { Server as NetServer, Socket } from 'node:net';
 import { createServer } from 'node:net';
 import { ProtocolVersions, RawPacket } from '@pmcs/packets';
 import pino from 'pino';
-import PlayerQuitEvent from '../events/PlayerQuitEvent';
-import { PluginManager } from '../managers/PluginManager';
-import decidePacket from '../packets/decider';
+import { v4 as uuidv4 } from 'uuid';
 import type { MCServerEvents } from '../types/MCServerEvents';
-import type { MCPartialServerOptions, MCServerOptions } from '../types/MCServerOptions';
-import callEvents from '../utils/callEvents';
 import { Player, PlayerState } from './Player';
+import PlayerQuitEvent from '@/events/PlayerQuitEvent';
+import { PluginManager } from '@/managers/PluginManager';
+import type { MCPartialServerOptions, MCServerOptions } from '@/types/MCServerOptions';
+import callEvents from '@/utils/callEvents';
+import handleUnknownVersionPacket from '@/versions/unknownVersionHandler';
 
 const defaultOptions: MCServerOptions = {
   connection: {
@@ -32,9 +33,10 @@ const defaultOptions: MCServerOptions = {
 };
 
 export class MCServer extends EventEmitter {
-  private allPlayers: Player[] = [];
   private netServer: NetServer;
 
+  // should be private, but we need to access it from the login packet handler
+  public readonly _allPlayers = new Map<string, Player>();
   public logger?: pino.Logger;
   public options: MCServerOptions;
   public pluginManager: PluginManager;
@@ -69,15 +71,17 @@ export class MCServer extends EventEmitter {
     });
 
     this.netServer.on('connection', (socket: Socket) => {
-      const player = new Player(socket, this);
-      this.allPlayers.push(player);
+      const unknownPlayerUUID = `unknown-${uuidv4()}`;
+      const player = new Player(socket, this).setUUID(unknownPlayerUUID);
+
+      this.players.set(player.uuid, player);
 
       socket.on('data', (data) => {
-        for (const packet of RawPacket.fromBuffer(data)) decidePacket(packet, player);
+        for (const packet of RawPacket.fromBuffer(data)) handleUnknownVersionPacket(packet, player);
       });
 
       socket.on('end', () => {
-        this.allPlayers.splice(this.allPlayers.indexOf(player), 1);
+        this.players.delete(player.uuid);
 
         if (!player._forcedDisconnect) {
           callEvents(this, 'playerQuit', new PlayerQuitEvent(player));
@@ -109,8 +113,11 @@ export class MCServer extends EventEmitter {
     }
   }
 
+  /**
+   * The players currently connected to the server.
+   */
   public get players() {
-    return this.allPlayers.filter((player) => player.state === PlayerState.Play);
+    return new Map([...this._allPlayers].filter(([, player]) => player.state === PlayerState.Play));
   }
 
   public on<T extends keyof MCServerEvents>(event: T, listener: MCServerEvents[T]): this {

@@ -1,7 +1,7 @@
-import type PlayerJoinEvent from '../events/PlayerJoinEvent';
-import type PlayerQuitEvent from '../events/PlayerQuitEvent';
-import type PluginLoadEvent from '../events/PluginLoadEvent';
-import type ServerListPingEvent from '../events/ServerListPingEvent';
+import type PlayerJoinEvent from '@/events/PlayerJoinEvent';
+import type PlayerQuitEvent from '@/events/PlayerQuitEvent';
+import type PluginLoadEvent from '@/events/PluginLoadEvent';
+import type ServerListPingEvent from '@/events/ServerListPingEvent';
 
 export interface MCServerEvents {
   playerJoin(event: PlayerJoinEvent): void;

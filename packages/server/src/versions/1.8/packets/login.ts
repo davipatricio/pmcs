@@ -1,7 +1,12 @@
 import type { RawPacket } from '@pmcs/packets';
-import { getVersionData } from '@pmcs/packets';
-import type { Player } from '../structures/Player';
-import { PlayerState } from '../structures/Player';
+import {
+  LoginClientboundLoginSuccessPacket,
+  LoginClientboundSetCompressionPacket,
+  LoginServerboundLoginStartPacket,
+  PlayClientboundJoinGamePacket,
+} from '@pmcs/packets/1.8';
+import type { Player } from '@/structures/Player';
+import { PlayerState } from '@/structures/Player';
 
 export function handleLoginStart(packet: RawPacket, player: Player) {
   decodeLoginStart(packet, player);
@@ -13,9 +18,8 @@ export function handleLoginAcknowledge(_packet: RawPacket, player: Player) {
 
 function decodeLoginStart(packet: RawPacket, player: Player) {
   const data = packet.data;
-  const mcData = getVersionData('1.8');
 
-  const { username } = new mcData.LoginServerboundLoginStartPacket(data);
+  const { username } = new LoginServerboundLoginStartPacket(data);
 
   if (username.length > 16) {
     player.kick('§cYour username is too long.');
@@ -25,8 +29,11 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
   player.setUsername(username);
 
   // if a player is already connected with the same name, kick the old player
-  const playerWithSameName = player.server.players.find((oldPlayer) => oldPlayer.username === player.username);
-  playerWithSameName?.kick('§cYou logged in from another location.');
+  for (const [_uuid, otherPlayer] of player.server.players) {
+    if (otherPlayer.username === username && otherPlayer !== player) {
+      otherPlayer.kick('Logged in from another location');
+    }
+  }
 
   enableCompression(player);
   sendLoginSuccessPacket(player);
@@ -40,9 +47,7 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
 }
 
 function sendLoginSuccessPacket(player: Player) {
-  const mcData = getVersionData('1.8');
-
-  const loginSuccess = new mcData.LoginClientboundLoginSuccessPacket({
+  const loginSuccess = new LoginClientboundLoginSuccessPacket({
     username: player.username,
     uuid: player.uuid,
     properties: [],
@@ -52,9 +57,7 @@ function sendLoginSuccessPacket(player: Player) {
 }
 
 function sendLoginPlayPacket(player: Player) {
-  const mcData = getVersionData('1.8');
-
-  const joinGame = new mcData.PlayClientboundJoinGamePacket({
+  const joinGame = new PlayClientboundJoinGamePacket({
     entityId: 10,
     gamemode: 0,
     dimension: 0,
@@ -68,10 +71,8 @@ function sendLoginPlayPacket(player: Player) {
 }
 
 function enableCompression(player: Player) {
-  const mcData = getVersionData('1.8');
-
   if (player.server.options.connection.compress) {
-    const compressionPacket = new mcData.LoginClientboundSetCompressionPacket({ threshold: 256 });
+    const compressionPacket = new LoginClientboundSetCompressionPacket({ threshold: 256 });
     player.sendPacket(compressionPacket);
   }
 }
