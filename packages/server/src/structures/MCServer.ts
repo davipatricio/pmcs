@@ -5,7 +5,8 @@ import { ProtocolVersions, RawPacket } from '@pmcs/packets';
 import pino from 'pino';
 import { v4 as uuidv4 } from 'uuid';
 import type { MCServerEvents } from '../types/MCServerEvents';
-import { Player, PlayerState } from './Player';
+import { Player } from './Player';
+import { PlayerState, UnknownPlayer } from '.';
 import PlayerQuitEvent from '@/events/PlayerQuitEvent';
 import { PluginManager } from '@/managers/PluginManager';
 import type { MCPartialServerOptions, MCServerOptions } from '@/types/MCServerOptions';
@@ -35,8 +36,12 @@ const defaultOptions: MCServerOptions = {
 export class MCServer extends EventEmitter {
   private netServer: NetServer;
 
-  // should be private, but we need to access it from the login packet handler
-  public readonly _allPlayers = new Map<string, Player>();
+  /**
+   * All players that have a connection to the server, regardless of state.
+   * Mapped by player UUID's.
+   * If a player is not logged in, their UUID will be `unknown-<random uuid>`.
+   */
+  public readonly _allPlayers = new Map<string, Player | UnknownPlayer>();
   public logger?: pino.Logger;
   public options: MCServerOptions;
   public pluginManager: PluginManager;
@@ -72,7 +77,7 @@ export class MCServer extends EventEmitter {
 
     this.netServer.on('connection', (socket: Socket) => {
       const unknownPlayerUUID = `unknown-${uuidv4()}`;
-      const player = new Player(socket, this).setUUID(unknownPlayerUUID);
+      const player = new UnknownPlayer(socket, this).setUUID(unknownPlayerUUID);
 
       this.players.set(player.uuid, player);
 
@@ -83,7 +88,7 @@ export class MCServer extends EventEmitter {
       socket.on('end', () => {
         this.players.delete(player.uuid);
 
-        if (!player._forcedDisconnect) {
+        if (!player._forcedDisconnect && player instanceof Player) {
           callEvents(this, 'playerQuit', new PlayerQuitEvent(player));
         }
       });

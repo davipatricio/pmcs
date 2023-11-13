@@ -1,11 +1,11 @@
 import type { RawPacket } from '@pmcs/packets';
-import type { Player } from '../../../structures/Player';
-import { PlayerState } from '../../../structures/Player';
+import type { UnknownPlayer } from '../../../structures/UnknownPlayer';
+import { PlayerState } from '../../../structures/UnknownPlayer';
 import { handleHandshake } from './handshake';
 import { handleLoginAcknowledge, handleLoginStart } from './login';
 import { handleLegacyPing, handlePingRequest, handleStatusRequest } from './status';
 
-export default function handlePacket(packet: RawPacket, player: Player) {
+export default function handlePacket(packet: RawPacket, player: UnknownPlayer) {
   switch (player.state) {
     case PlayerState.Handshaking: {
       handleHandshakingPackets(packet, player);
@@ -32,7 +32,7 @@ export default function handlePacket(packet: RawPacket, player: Player) {
   }
 }
 
-function handleHandshakingPackets(packet: RawPacket, player: Player) {
+function handleHandshakingPackets(packet: RawPacket, player: UnknownPlayer) {
   switch (packet.id) {
     case 0x00:
       handleHandshake(packet, player);
@@ -46,7 +46,7 @@ function handleHandshakingPackets(packet: RawPacket, player: Player) {
   }
 }
 
-function handleStatusPackets(packet: RawPacket, player: Player) {
+function handleStatusPackets(packet: RawPacket, player: UnknownPlayer) {
   switch (packet.id) {
     case 0x00:
       handleStatusRequest(packet, player);
@@ -57,7 +57,7 @@ function handleStatusPackets(packet: RawPacket, player: Player) {
   }
 }
 
-function handleLoginPackets(packet: RawPacket, player: Player) {
+function handleLoginPackets(packet: RawPacket, player: UnknownPlayer) {
   switch (packet.id) {
     case 0x00:
       handleLoginStart(packet, player);

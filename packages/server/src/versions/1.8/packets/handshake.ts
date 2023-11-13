@@ -1,9 +1,9 @@
 import { ProtocolVersions, type RawPacket } from '@pmcs/packets';
 import { HandshakingServerboundHandshakePacket } from '@pmcs/packets/1.8';
-import type { Player } from '@/structures/Player';
+import type { UnknownPlayer } from '@/structures';
 import createPlayer from '@/versions/createPlayer';
 
-export function handleHandshake(packet: RawPacket, player: Player) {
+export function handleHandshake(packet: RawPacket, player: UnknownPlayer) {
   const handshakeData = new HandshakingServerboundHandshakePacket(packet.data);
 
   player
@@ -13,6 +13,6 @@ export function handleHandshake(packet: RawPacket, player: Player) {
 
   player.server._allPlayers.set(
     player.uuid,
-    createPlayer(player.protocolVersion, { socket: player._socket, server: player.server }),
+    createPlayer(player.protocolVersion, { socket: player.socket, server: player.server }),
   );
 }

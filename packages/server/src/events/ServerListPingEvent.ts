@@ -1,20 +1,20 @@
 import type { ChatComponent } from '@pmcs/chat';
 import { createChatComponent } from '@pmcs/chat';
 import type { StatusResponsePacketData } from '@pmcs/packets/1.20.2';
+import type { UnknownPlayer } from '..';
 import type { MCServer } from '@/structures/MCServer';
-import type { Player } from '@/structures/Player';
 
 export default class ServerListPingEvent {
   public readonly data: StatusResponsePacketData;
   public readonly server: MCServer;
 
-  public constructor(public readonly player: Player) {
+  public constructor(public readonly player: UnknownPlayer) {
     this.server = player.server;
 
     this.data = {
       players: {
         max: this.server.options.server.maxPlayers,
-        online: this.server.players.length,
+        online: this.server.players.size,
       },
       description: createChatComponent(this.server.options.server.defaultMotd),
       version: {

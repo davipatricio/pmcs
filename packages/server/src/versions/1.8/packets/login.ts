@@ -5,19 +5,25 @@ import {
   LoginServerboundLoginStartPacket,
   PlayClientboundJoinGamePacket,
 } from '@pmcs/packets/1.8';
-import type { Player } from '@/structures/Player';
-import { PlayerState } from '@/structures/Player';
+import { Player } from '@/structures';
+import { PlayerState, type UnknownPlayer } from '@/structures/UnknownPlayer';
+import createPlayer from '@/versions/createPlayer';
 
-export function handleLoginStart(packet: RawPacket, player: Player) {
+export function handleLoginStart(packet: RawPacket, player: UnknownPlayer) {
   decodeLoginStart(packet, player);
 }
 
-export function handleLoginAcknowledge(_packet: RawPacket, player: Player) {
+export function handleLoginAcknowledge(_packet: RawPacket, player: UnknownPlayer) {
   player.setState(PlayerState.Configuration);
 }
 
-function decodeLoginStart(packet: RawPacket, player: Player) {
+function decodeLoginStart(packet: RawPacket, unknownPlayer: UnknownPlayer) {
   const data = packet.data;
+
+  const player = createPlayer(unknownPlayer.protocolVersion, {
+    socket: unknownPlayer.socket,
+    server: unknownPlayer.server,
+  });
 
   const { username } = new LoginServerboundLoginStartPacket(data);
 
@@ -30,8 +36,8 @@ function decodeLoginStart(packet: RawPacket, player: Player) {
 
   // if a player is already connected with the same name, kick the old player
   for (const [_uuid, otherPlayer] of player.server.players) {
-    if (otherPlayer.username === username && otherPlayer !== player) {
-      otherPlayer.kick('Logged in from another location');
+    if (otherPlayer.username === username && otherPlayer !== player && otherPlayer instanceof Player) {
+      (otherPlayer as Player).kick('Logged in from another location');
     }
   }
 

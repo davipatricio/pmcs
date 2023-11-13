@@ -1,95 +1,13 @@
 import type { Socket } from 'node:net';
-import type { RawPacket } from '@pmcs/packets';
 import type { MCServer } from './MCServer';
+import { UnknownPlayer } from '.';
 
-export enum PlayerState {
-  Handshaking,
-  Status,
-  Login,
-  Play,
-  Configuration,
-}
-
-export class Player {
-  /**
-   * The current state of the player.
-   */
-  public state: PlayerState = PlayerState.Handshaking;
-  /**
-   * The name of the current player. Empty string if user is not logged in (state not `Play`).
-   */
-  public username: string = '';
-  /**
-   * The UUID of the current player. Empty string if user is not logged in (state not `Play`).
-   */
-  public uuid: string = '';
-
-  /**
-   * @internal
-   */
-  public _forcedDisconnect: boolean = false;
-
-  /**
-   * The version of the client the player is using.
-   */
-  public readonly version: `${string}.${string}` = '1.20.2';
-
-  /**
-   * The protocol version of the client the player is using.
-   */
-  public readonly protocolVersion: number = 754;
-
+export class Player extends UnknownPlayer {
   public constructor(
     public readonly _socket: Socket,
     public readonly server: MCServer,
-  ) {}
-
-  /**
-   * Sets the player's state. Should not be changed manually.
-   *
-   * @param state - The state to set the player to.
-   */
-  public setState(state: PlayerState) {
-    this.state = state;
-    return this;
-  }
-
-  /**
-   * Sets the player's username. Should not be changed manually.
-   *
-   * @param username - The username to set the player to.
-   */
-  public setUsername(username: string) {
-    this.username = username;
-    return this;
-  }
-
-  /**
-   * Sets the player's UUID. Should not be changed manually.
-   */
-  public setUUID(uuid: string) {
-    this.uuid = uuid;
-    return this;
-  }
-
-  public setVersion(version: string) {
-    Object.defineProperty(this, 'version', { value: version, writable: false, configurable: false });
-    return this;
-  }
-
-  public setProtocolVersion(protocolVersion: number) {
-    Object.defineProperty(this, 'protocolVersion', { value: protocolVersion, writable: false, configurable: false });
-    return this;
-  }
-
-  /**
-   * Sends a Packet to the player.
-   *
-   * @param packet - The packet to send to the player.
-   */
-  public sendPacket(packet: RawPacket) {
-    if (this._socket.closed) return;
-    this._socket.write(packet.getBuffer());
+  ) {
+    super(_socket, server);
   }
 
   /**
@@ -99,13 +17,5 @@ export class Player {
    */
   public kick(_reason: string) {
     throw new Error('Player not initialized correctly.');
-  }
-
-  /**
-   * Drops the connection with the player immediately.
-   */
-  public disconnect() {
-    if (this._socket.closed) return;
-    this._socket.destroy();
   }
 }
