@@ -13,6 +13,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.8.6",
+		"@types/uuid": "^9.0.6",
 		"eslint": "^8.51.0",
 		"eslint-config-neon": "^0.1.57",
 		"eslint-plugin-prettier": "^5.0.1",
@@ -25,6 +26,7 @@
 		"@pmcs/encoding": "workspace:^",
 		"@pmcs/packets": "workspace:^",
 		"pino": "^8.16.0",
-		"pino-pretty": "^10.2.3"
+		"pino-pretty": "^10.2.3",
+		"uuid": "^9.0.1"
 	}
 }
