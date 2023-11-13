@@ -37,7 +37,7 @@ function decodeLoginStart(packet: RawPacket, unknownPlayer: UnknownPlayer) {
   // if a player is already connected with the same name, kick the old player
   for (const [_uuid, otherPlayer] of player.server.players) {
     if (otherPlayer.username === username && otherPlayer !== player && otherPlayer instanceof Player) {
-      (otherPlayer as Player).kick('Logged in from another location');
+      otherPlayer.kick('Logged in from another location');
     }
   }
 
