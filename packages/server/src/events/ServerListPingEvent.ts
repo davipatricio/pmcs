@@ -1,8 +1,8 @@
 import type { ChatComponent } from '@pmcs/chat';
 import { createChatComponent } from '@pmcs/chat';
 import type { StatusResponsePacketData } from '@pmcs/packets/1.20.2';
-import type { UnknownPlayer } from '..';
 import type { MCServer } from '@/structures/MCServer';
+import type { UnknownPlayer } from '..';
 
 export default class ServerListPingEvent {
   public readonly data: StatusResponsePacketData;

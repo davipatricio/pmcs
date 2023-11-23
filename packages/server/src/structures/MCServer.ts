@@ -4,14 +4,14 @@ import { createServer } from 'node:net';
 import { ProtocolVersions, RawPacket } from '@pmcs/packets';
 import pino from 'pino';
 import { v4 as uuidv4 } from 'uuid';
-import type { MCServerEvents } from '../types/MCServerEvents';
-import { Player } from './Player';
-import { PlayerState, UnknownPlayer } from '.';
 import PlayerQuitEvent from '@/events/PlayerQuitEvent';
 import { PluginManager } from '@/managers/PluginManager';
 import type { MCPartialServerOptions, MCServerOptions } from '@/types/MCServerOptions';
 import callEvents from '@/utils/callEvents';
 import handleUnknownVersionPacket from '@/versions/unknownVersionHandler';
+import type { MCServerEvents } from '../types/MCServerEvents';
+import { Player } from './Player';
+import { PlayerState, UnknownPlayer } from '.';
 
 const defaultOptions: MCServerOptions = {
   connection: {
