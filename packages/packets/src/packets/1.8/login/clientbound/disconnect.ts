@@ -1,6 +1,6 @@
-import { writeString } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import { writeString } from '@pmcs/encoding';
 import type { DisconnectReasonData } from '../../play';
 
 export class LoginClientboundDisconnectPacket extends RawPacket implements ClientboundPacket {

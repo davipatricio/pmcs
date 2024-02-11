@@ -18,7 +18,11 @@
     },
     "lint": {
       "inputs": [".eslintcache", "**/*.ts"],
-      "outputs": [".eslintcache", "**/*.ts"]
+      "outputs": []
+    },
+    "format": {
+      "inputs": ["**/*.ts"],
+      "outputs": ["**/*.ts"]
     },
     "typecheck": {
       "inputs": ["**/*.ts"]

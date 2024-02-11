@@ -1,11 +1,11 @@
 import type { Socket } from 'node:net';
-import type { MCServer } from './MCServer';
 import { UnknownPlayer } from '.';
+import type { MCServer } from './MCServer';
 
 export class Player extends UnknownPlayer {
   public constructor(
     public readonly _socket: Socket,
-    public readonly server: MCServer,
+    public readonly server: MCServer
   ) {
     super(_socket, server);
   }

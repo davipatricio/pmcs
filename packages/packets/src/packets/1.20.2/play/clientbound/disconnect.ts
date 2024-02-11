@@ -1,7 +1,7 @@
-import type { ChatComponent } from '@pmcs/chat';
-import { writeString } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import type { ChatComponent } from '@pmcs/chat';
+import { writeString } from '@pmcs/encoding';
 
 /**
  * A string containing the reason for the disconnect or a Chat component.

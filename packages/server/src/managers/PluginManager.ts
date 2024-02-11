@@ -11,6 +11,7 @@ export interface LoadPluginCallback {
 
 export class PluginManager {
   public plugins = new Map<string, LoadPluginCallback>();
+  // biome-ignore lint/nursery/noEmptyBlockStatements: <explanation>
   public constructor(public server: MCServer) {}
 
   public loadPlugin(name: string, callback: LoadPluginCallback) {

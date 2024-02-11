@@ -3,11 +3,11 @@ import type { RawPacket } from '@pmcs/packets';
 import type { MCServer } from './MCServer';
 
 export enum PlayerState {
-  Handshaking,
-  Status,
-  Login,
-  Play,
-  Configuration,
+  Handshaking = 0,
+  Status = 1,
+  Login = 2,
+  Play = 3,
+  Configuration = 4
 }
 
 export class UnknownPlayer {
@@ -19,17 +19,17 @@ export class UnknownPlayer {
   /**
    * @internal
    */
-  public _forcedDisconnect: boolean = false;
+  public _forcedDisconnect = false;
 
   /**
    * The name of the current player. Empty string if user is not logged in (state not `Play`).
    */
-  public username: string = '';
+  public username = '';
 
   /**
    * The UUID of the current player. Empty string if user is not logged in (state not `Play`).
    */
-  public uuid: string = '';
+  public uuid = '';
 
   /**
    * The version of the client the player is using.
@@ -43,7 +43,8 @@ export class UnknownPlayer {
 
   public constructor(
     public readonly socket: Socket,
-    public readonly server: MCServer,
+    public readonly server: MCServer
+    // biome-ignore lint/nursery/noEmptyBlockStatements: <explanation>
   ) {}
 
   /**

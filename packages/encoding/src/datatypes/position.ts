@@ -13,6 +13,6 @@ export function readPosition(buffer: number[]) {
 
   return {
     value: [xAxis, yAxis, zAxis],
-    bytes,
+    bytes
   };
 }

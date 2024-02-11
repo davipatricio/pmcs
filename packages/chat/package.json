@@ -11,6 +11,19 @@
     "typecheck": "tsc",
     "lint": "eslint . --cache --ext .ts"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
   "devDependencies": {
     "@types/node": "^20.11.17",
     "eslint": "^8.56.0",

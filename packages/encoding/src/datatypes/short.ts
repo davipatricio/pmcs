@@ -2,7 +2,7 @@ export function readShort(buffer: number[]) {
   const value = (buffer[0] << 8) | buffer[1];
   return {
     value,
-    bytes: 2,
+    bytes: 2
   };
 }
 

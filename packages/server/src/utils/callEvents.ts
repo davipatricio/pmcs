@@ -10,7 +10,7 @@ import type { MCServerEvents } from '@/types/MCServerEvents';
  * @example
  * callEvents(server, 'playerJoin', new PlayerJoinEvent(player));
  */
-export default function callEvents(server: MCServer, eventName: keyof MCServerEvents, eventClass: any) {
+export default function callEvents(server: MCServer, eventName: keyof MCServerEvents, eventClass: unknown) {
   const listeners = server.listeners(eventName);
 
   for (const listener of listeners) {

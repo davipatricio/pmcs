@@ -1,6 +1,6 @@
-import { writeVarInt } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import { writeVarInt } from '@pmcs/encoding';
 
 export interface SetRenderDistancePacketData {
   /**

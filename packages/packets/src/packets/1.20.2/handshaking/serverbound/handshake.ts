@@ -1,7 +1,7 @@
 import { Buffer } from 'node:buffer';
-import { readShort, readString, readVarInt } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ServerboundPacket } from '@/types/ServerboundPacket';
+import { readShort, readString, readVarInt } from '@pmcs/encoding';
 
 export class HandshakingServerboundHandshakePacket extends RawPacket implements ServerboundPacket {
   public protocolVersion: number;
@@ -33,7 +33,7 @@ export class HandshakingServerboundHandshakePacket extends RawPacket implements 
       protocolVersion: this.protocolVersion,
       serverAddress: this.serverAddress,
       serverPort: this.serverPort,
-      nextState: this.nextState,
+      nextState: this.nextState
     };
   }
 }

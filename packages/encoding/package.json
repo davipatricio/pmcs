@@ -9,7 +9,21 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc",
-    "lint": "eslint . --cache --ext .ts"
+    "lint": "biome check .",
+    "format": "biome check --apply ."
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/index.d.ts"
+      ]
+    }
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

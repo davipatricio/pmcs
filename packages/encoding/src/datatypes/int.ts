@@ -8,7 +8,7 @@ export function readInt(number: number[]) {
 
   return {
     value,
-    bytes: 4,
+    bytes: 4
   };
 }
 

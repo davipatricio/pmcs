@@ -17,7 +17,7 @@ export function readVarInt(number: number[]) {
 
   return {
     bytes: numBytes,
-    value,
+    value
   };
 }
 

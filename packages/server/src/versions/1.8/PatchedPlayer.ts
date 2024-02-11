@@ -1,8 +1,8 @@
-import { createChatComponent } from '@pmcs/chat';
-import { LoginClientboundDisconnectPacket, PlayClientboundDisconnectPacket } from '@pmcs/packets/1.8';
 import PlayerQuitEvent from '@/events/PlayerQuitEvent';
 import { Player, PlayerState } from '@/structures';
 import callEvents from '@/utils/callEvents';
+import { createChatComponent } from '@pmcs/chat';
+import { LoginClientboundDisconnectPacket, PlayClientboundDisconnectPacket } from '@pmcs/packets/1.8';
 
 export default class PatchedPlayer extends Player {
   /**

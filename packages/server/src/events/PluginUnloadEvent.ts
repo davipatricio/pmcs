@@ -10,12 +10,13 @@ interface PluginUnloadEventData {
 export default class PluginUnloadEvent {
   public data: PluginUnloadEventData;
 
+  // biome-ignore lint/nursery/noEmptyBlockStatements: <explanation>
   public constructor(public readonly server: MCServer) {}
 
   public setData(data: Partial<PluginUnloadEventData>) {
     this.data = {
       ...this.data,
-      ...data,
+      ...data
     };
     return this;
   }

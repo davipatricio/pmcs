@@ -9,7 +9,7 @@ export function readString(buffer: number[]) {
 
   return {
     value: string,
-    bytes: bytes + value,
+    bytes: bytes + value
   };
 }
 

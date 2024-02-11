@@ -8,7 +8,7 @@ interface PlayerQuitEventData {
 export default class PlayerQuitEvent {
   public constructor(
     public readonly player: Player,
-    public readonly data: PlayerQuitEventData = {},
+    public readonly data: PlayerQuitEventData = {}
   ) {
     this.data = data;
   }

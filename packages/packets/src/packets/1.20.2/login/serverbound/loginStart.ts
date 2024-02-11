@@ -1,7 +1,7 @@
 import { Buffer } from 'node:buffer';
-import { readString, readUUID } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ServerboundPacket } from '@/types/ServerboundPacket';
+import { readString, readUUID } from '@pmcs/encoding';
 
 export class LoginServerboundLoginStartPacket extends RawPacket implements ServerboundPacket {
   public username: string;
@@ -25,7 +25,7 @@ export class LoginServerboundLoginStartPacket extends RawPacket implements Serve
   public toJSON() {
     return {
       username: this.username,
-      uuid: this.uuid,
+      uuid: this.uuid
     };
   }
 }

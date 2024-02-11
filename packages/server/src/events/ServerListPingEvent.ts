@@ -1,7 +1,7 @@
+import type { MCServer } from '@/structures/MCServer';
 import type { ChatComponent } from '@pmcs/chat';
 import { createChatComponent } from '@pmcs/chat';
 import type { StatusResponsePacketData } from '@pmcs/packets/1.20.2';
-import type { MCServer } from '@/structures/MCServer';
 import type { UnknownPlayer } from '..';
 
 export default class ServerListPingEvent {
@@ -14,13 +14,13 @@ export default class ServerListPingEvent {
     this.data = {
       players: {
         max: this.server.options.server.maxPlayers,
-        online: this.server.players.size,
+        online: this.server.players.size
       },
       description: createChatComponent(this.server.options.server.defaultMotd),
       version: {
         name: this.server.options.version.name,
-        protocol: this.server.options.version.protocol,
-      },
+        protocol: this.server.options.version.protocol
+      }
     };
   }
 

@@ -8,7 +8,9 @@ export class StatusServerboundStatusRequestPacket extends RawPacket implements S
     this.parseData();
   }
 
-  private parseData() {}
+  private parseData() {
+    return;
+  }
 
   public toJSON() {
     return {};

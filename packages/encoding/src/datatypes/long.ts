@@ -8,7 +8,7 @@ export function readLong(buffer: number[]) {
 
   return {
     value,
-    bytes: 8,
+    bytes: 8
   };
 }
 

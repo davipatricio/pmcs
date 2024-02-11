@@ -1,13 +1,13 @@
+import { Player } from '@/structures';
+import { PlayerState, type UnknownPlayer } from '@/structures/UnknownPlayer';
+import createPlayer from '@/versions/createPlayer';
 import type { RawPacket } from '@pmcs/packets';
 import {
   LoginClientboundLoginSuccessPacket,
   LoginClientboundSetCompressionPacket,
   LoginServerboundLoginStartPacket,
-  PlayClientboundJoinGamePacket,
+  PlayClientboundJoinGamePacket
 } from '@pmcs/packets/1.8';
-import { Player } from '@/structures';
-import { PlayerState, type UnknownPlayer } from '@/structures/UnknownPlayer';
-import createPlayer from '@/versions/createPlayer';
 
 export function handleLoginStart(packet: RawPacket, player: UnknownPlayer) {
   decodeLoginStart(packet, player);
@@ -22,7 +22,7 @@ function decodeLoginStart(packet: RawPacket, unknownPlayer: UnknownPlayer) {
 
   const player = createPlayer(unknownPlayer.protocolVersion, {
     socket: unknownPlayer.socket,
-    server: unknownPlayer.server,
+    server: unknownPlayer.server
   });
 
   const { username } = new LoginServerboundLoginStartPacket(data);
@@ -56,7 +56,7 @@ function sendLoginSuccessPacket(player: Player) {
   const loginSuccess = new LoginClientboundLoginSuccessPacket({
     username: player.username,
     uuid: player.uuid,
-    properties: [],
+    properties: []
   });
 
   player.sendPacket(loginSuccess);
@@ -70,7 +70,7 @@ function sendLoginPlayPacket(player: Player) {
     difficulty: 0,
     maxPlayers: 100,
     levelType: 'default',
-    reducedDebugInfo: false,
+    reducedDebugInfo: false
   });
 
   player.sendPacket(joinGame);

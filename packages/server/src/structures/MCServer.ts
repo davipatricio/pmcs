@@ -1,22 +1,22 @@
 import { EventEmitter } from 'node:events';
 import type { Server as NetServer, Socket } from 'node:net';
 import { createServer } from 'node:net';
-import { ProtocolVersions, RawPacket } from '@pmcs/packets';
-import pino from 'pino';
-import { v4 as uuidv4 } from 'uuid';
 import PlayerQuitEvent from '@/events/PlayerQuitEvent';
 import { PluginManager } from '@/managers/PluginManager';
 import type { MCPartialServerOptions, MCServerOptions } from '@/types/MCServerOptions';
 import callEvents from '@/utils/callEvents';
 import handleUnknownVersionPacket from '@/versions/unknownVersionHandler';
+import { ProtocolVersions, RawPacket } from '@pmcs/packets';
+import pino from 'pino';
+import { v4 as uuidv4 } from 'uuid';
+import { PlayerState, UnknownPlayer } from '.';
 import type { MCServerEvents } from '../types/MCServerEvents';
 import { Player } from './Player';
-import { PlayerState, UnknownPlayer } from '.';
 
 const defaultOptions: MCServerOptions = {
   connection: {
     compress: false,
-    noDelay: false,
+    noDelay: false
   },
   enableLogger: true,
   server: {
@@ -25,12 +25,12 @@ const defaultOptions: MCServerOptions = {
     defaultMotd: 'A Minecraft Server',
     gamemode: 'survival',
     forceGamemode: false,
-    hideOnlinePlayers: false,
+    hideOnlinePlayers: false
   },
   version: {
     name: '1.20.2',
-    protocol: 764,
-  },
+    protocol: 764
+  }
 };
 
 export class MCServer extends EventEmitter {
@@ -52,17 +52,17 @@ export class MCServer extends EventEmitter {
     this.options = {
       connection: {
         ...defaultOptions.connection,
-        ...options?.connection,
+        ...options?.connection
       },
       enableLogger: options?.enableLogger ?? defaultOptions.enableLogger,
       server: {
         ...defaultOptions.server,
-        ...options?.server,
+        ...options?.server
       },
       version: {
         ...defaultOptions.version,
-        ...options?.version,
-      },
+        ...options?.version
+      }
     };
 
     this.setup();
@@ -97,7 +97,7 @@ export class MCServer extends EventEmitter {
 
   protected setup() {
     this.netServer = createServer({
-      noDelay: this.options.connection.noDelay,
+      noDelay: this.options.connection.noDelay
     });
 
     this.pluginManager = new PluginManager(this);
@@ -107,9 +107,9 @@ export class MCServer extends EventEmitter {
         transport: {
           target: 'pino-pretty',
           options: {
-            colorize: true,
-          },
-        },
+            colorize: true
+          }
+        }
       });
     }
 

@@ -1,7 +1,7 @@
 export function readByte(buffer: number[]) {
   return {
     value: buffer[0],
-    bytes: 1,
+    bytes: 1
   };
 }
 

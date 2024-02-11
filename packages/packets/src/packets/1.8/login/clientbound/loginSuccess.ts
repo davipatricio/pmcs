@@ -1,7 +1,7 @@
-import { writeString } from '@pmcs/encoding';
-import { v3 as uuidv3 } from 'uuid';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import { writeString } from '@pmcs/encoding';
+import { v3 as uuidv3 } from 'uuid';
 
 export interface LoginSuccessPacketData {
   properties: [];

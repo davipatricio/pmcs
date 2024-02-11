@@ -10,12 +10,13 @@ interface PluginLoadEventData {
 export default class PluginLoadEvent {
   public data: PluginLoadEventData;
 
+  // biome-ignore lint/nursery/noEmptyBlockStatements: <explanation>
   public constructor(public readonly server: MCServer) {}
 
   public setData(data: Partial<PluginLoadEventData>) {
     this.data = {
       ...this.data,
-      ...data,
+      ...data
     };
     return this;
   }

@@ -6,5 +6,5 @@ export default defineConfig((options) => ({
   format: options.watch ? 'esm' : ['esm', 'cjs'],
   splitting: false,
   clean: true,
-  dts: true,
+  dts: true
 }));

@@ -1,7 +1,7 @@
-import { type ChatComponent } from '@pmcs/chat';
-import { writeString } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import { type ChatComponent } from '@pmcs/chat';
+import { writeString } from '@pmcs/encoding';
 
 export interface StatusResponsePacketData {
   description: ChatComponent;

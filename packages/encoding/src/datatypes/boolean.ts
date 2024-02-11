@@ -1,9 +1,9 @@
 export function readBoolean(buffer: number[]) {
-  const value = buffer.shift()!;
+  const value = buffer.shift();
 
   return {
     value: value === 1,
-    bytes: 1,
+    bytes: 1
   };
 }
 

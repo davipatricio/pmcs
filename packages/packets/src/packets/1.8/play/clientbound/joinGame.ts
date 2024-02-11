@@ -1,6 +1,6 @@
-import { writeBoolean, writeByte, writeInt, writeString, writeUnsignedByte } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import { writeBoolean, writeByte, writeInt, writeString, writeUnsignedByte } from '@pmcs/encoding';
 
 /**
  * A string containing the reason for the disconnect or a Chat component.
@@ -37,7 +37,7 @@ export class PlayClientboundJoinGamePacket extends RawPacket implements Clientbo
       ...writeUnsignedByte(this.payload.difficulty),
       ...writeUnsignedByte(this.payload.maxPlayers),
       ...writeString(this.payload.levelType),
-      ...writeBoolean(this.payload.reducedDebugInfo),
+      ...writeBoolean(this.payload.reducedDebugInfo)
     ]);
     return this;
   }

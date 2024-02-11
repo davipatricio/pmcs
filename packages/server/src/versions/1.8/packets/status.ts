@@ -1,8 +1,8 @@
-import type { RawPacket } from '@pmcs/packets';
-import { StatusClientboundStatusResponsePacket } from '@pmcs/packets/1.8';
 import ServerListPingEvent from '@/events/ServerListPingEvent';
 import type { UnknownPlayer } from '@/structures';
 import callEvents from '@/utils/callEvents';
+import type { RawPacket } from '@pmcs/packets';
+import { StatusClientboundStatusResponsePacket } from '@pmcs/packets/1.8';
 
 export function handleStatusRequest(_packet: RawPacket, player: UnknownPlayer) {
   const event = new ServerListPingEvent(player);

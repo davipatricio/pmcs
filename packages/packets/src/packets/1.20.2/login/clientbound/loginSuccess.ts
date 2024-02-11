@@ -1,6 +1,6 @@
-import { writeString, writeVarInt } from '@pmcs/encoding';
 import { RawPacket } from '@/structures/RawPacket';
 import type { ClientboundPacket } from '@/types/ClientboundPacket';
+import { writeString, writeVarInt } from '@pmcs/encoding';
 
 export interface LoginSuccessPacketData {
   properties: [];

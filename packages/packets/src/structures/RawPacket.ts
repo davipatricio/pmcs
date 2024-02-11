@@ -4,7 +4,8 @@ import { readVarInt, writeVarInt } from '@pmcs/encoding';
 export class RawPacket {
   public constructor(
     public id = 0,
-    public data: number[] = [],
+    public data: number[] = []
+    // biome-ignore lint/nursery/noEmptyBlockStatements: <explanation>
   ) {}
 
   public setID(id: number[]) {

@@ -6,7 +6,7 @@ export function readUUID(buffer: number[]) {
 
   return {
     value: uuid,
-    bytes: 16,
+    bytes: 16
   };
 }
 
